@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface OrganisationRepository extends JpaRepository<Organisation, String> {
     List<Organisation> findByName(String name);
+
 }

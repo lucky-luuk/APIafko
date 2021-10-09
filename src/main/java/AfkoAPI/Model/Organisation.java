@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+
 @Entity
 public class Organisation {
     @Id
@@ -12,9 +13,6 @@ public class Organisation {
 
     @Column(name = "name")
     private String name;
-
-    @OneToMany(mappedBy = "organisation", cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Abbreviation.class)
-    private Set abbreviations = new HashSet<>();
 
     protected Organisation() {}
     public Organisation(String name) {

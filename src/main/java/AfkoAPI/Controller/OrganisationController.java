@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
-
+// localhost:8080/add_org
 @RestController
 public class OrganisationController {
 
