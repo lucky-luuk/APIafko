@@ -26,7 +26,7 @@ public class AbbreviationController {
     // todo just temporary to test, replace with post later
     @GetMapping("/add")
     public HTTPResponse addAbbreviation() {
-        return dao.addAbbreviation("etc", "et cetera", "69fe9a5e-26fc-46de-96a4-855bde790bfe");
+        return dao.addAbbreviation("etc", "et cetera", "69fe9a5e-26fc-46de-96a4-855bde790bfe", null);
     }
     @GetMapping("/abbreviation")
     public HTTPResponse getAbbreviation(@RequestParam(name="id", defaultValue="") String id,

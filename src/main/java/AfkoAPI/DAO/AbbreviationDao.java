@@ -2,6 +2,7 @@ package AfkoAPI.DAO;
 
 import AfkoAPI.HTTPResponse;
 import AfkoAPI.Model.Abbreviation;
+import AfkoAPI.Model.Account;
 import AfkoAPI.Model.Organisation;
 import AfkoAPI.Repository.AbbreviationRepository;
 import AfkoAPI.Repository.OrganisationRepository;
@@ -21,11 +22,11 @@ public class AbbreviationDao {
 
     public AbbreviationDao() {}
 
-    public HTTPResponse addAbbreviation(String name, String description, String orgId) {
+    public HTTPResponse addAbbreviation(String name, String description, String orgId, Account account) {
         Optional<Organisation> org = orgRep.findById(orgId);
         if (org.isEmpty()) return HTTPResponse.<Abbreviation>returnFailure("organisation with id: " + orgId + " does not exist");
 
-        Abbreviation abbr = new Abbreviation("etc", "et cetera", org.get(), null);
+        Abbreviation abbr = new Abbreviation(name, description, org.get(), account);
         abbrRep.save(abbr);
         return HTTPResponse.<Abbreviation>returnSuccess(abbr);
     }
