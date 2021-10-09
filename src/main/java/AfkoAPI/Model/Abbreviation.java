@@ -18,8 +18,7 @@ public class Abbreviation {
     @ManyToMany(targetEntity = Organisation.class, cascade = CascadeType.ALL)
     private Set<Organisation> organisations = new HashSet<>();
 
-    @ManyToOne
-    @JoinColumn(name = "created_by")
+    @ManyToOne(targetEntity = Account.class)
     private Account createdBy;
 
     @Column(name = "isUnderReview")
@@ -51,14 +50,19 @@ public class Abbreviation {
         return description;
     }
 
+    public boolean isUnderReview() {
+        return isUnderReview;
+    }
+
+    public Account getCreatedBy() { return createdBy; }
+
     public Set<Organisation> getOrganisations() {
         return organisations;
     }
+
     public void addOrganisation(Organisation org) {
         organisations.add(org);
     }
 
-    public boolean isUnderReview() {
-        return isUnderReview;
-    }
+
 }

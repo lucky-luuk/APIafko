@@ -23,9 +23,6 @@ public class Account {
     @Column(name = "password")
     private String password; // idk how to create this shit
 
-//    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Abbreviation.class)
-//    private Set abbreviations = new HashSet<>();
-
     private Account() {}
     public Account(String firstName, String lastName, String email) {
         this.firstName = firstName;
