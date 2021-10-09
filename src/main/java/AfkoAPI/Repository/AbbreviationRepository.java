@@ -9,5 +9,5 @@ public interface AbbreviationRepository extends JpaRepository<Abbreviation, Stri
     // https://spring.io/guides/gs/accessing-data-jpa/
     List<Abbreviation> findByName(String name);
     // organisation_id = organisation.id https://stackoverflow.com/questions/44566760/spring-boot-using-foreign-key-in-crudrepository
-    //List<Abbreviation> findByOrganisations_id(String org);
+    List<Abbreviation> findByOrganisations_id(String id);
 }

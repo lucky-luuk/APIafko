@@ -1,10 +1,7 @@
 package AfkoAPI.Model;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 public class Abbreviation {
@@ -18,7 +15,8 @@ public class Abbreviation {
     @Column(name = "description")
     private String description;
 
-
+    @ManyToMany(targetEntity = Organisation.class, cascade = CascadeType.ALL)
+    private Set<Organisation> organisations = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "created_by")
@@ -28,14 +26,13 @@ public class Abbreviation {
     private boolean isUnderReview;
 
 
-
     // The default constructor exists only for the sake of JPA (https://spring.io/guides/gs/accessing-data-jpa/)
     protected Abbreviation() {}
     // creates a new id, do not use for already existing data!
     public Abbreviation(String name, String description, Organisation org, Account createdBy) {
         this.name = name;
         this.description = description;
-        //this.abbreviationOrganisations.add(new AbbreviationOrganisation(this, org));
+        this.organisations.add(org);
         this.isUnderReview = true;
         // for the uuid: https://jivimberg.io/blog/2018/11/05/using-uuid-on-spring-data-jpa-entities/
         this.id = UUID.randomUUID().toString();
@@ -54,18 +51,13 @@ public class Abbreviation {
         return description;
     }
 
-    //public Set<AbbreviationOrganisation> getAbbreviationOrganisations() { return abbreviationOrganisations; }
-    // todo maybe simplify a bit later somehow
-//    public Set<Organisation> getOrganisations() {
-//        Set<Organisation> orgs = new HashSet<>();
-//        for (Iterator<AbbreviationOrganisation> it = abbreviationOrganisations.iterator(); it.hasNext();) {
-//            AbbreviationOrganisation abbrorg = it.next();
-//            if (abbrorg.getAbbreviation().getId().equals(this.id)) {
-//                orgs.add(abbrorg.getOrganisation());
-//            }
-//        }
-//        return orgs;
-//    }
+    public Set<Organisation> getOrganisations() {
+        return organisations;
+    }
+    public void addOrganisation(Organisation org) {
+        organisations.add(org);
+    }
+
     public boolean isUnderReview() {
         return isUnderReview;
     }
