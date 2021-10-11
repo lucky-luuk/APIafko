@@ -24,4 +24,10 @@ public class HTTPResponse<T> {
     public static <T> HTTPResponse returnFailure(String message) {
         return new HTTPResponse<T>("FAILURE", message, null);
     }
+    public static <T> HTTPResponse returnUserDisabled(String message) {
+        return new HTTPResponse<T>("USER_DISABLED", message, null);
+    }
+    public static <T> HTTPResponse returnInvalidCredentials(String message) {
+        return new HTTPResponse<T>("INVALID_CREDENTIALS", message, null);
+    }
 }
