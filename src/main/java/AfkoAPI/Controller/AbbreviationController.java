@@ -1,35 +1,44 @@
 package AfkoAPI.Controller;
 
+import AfkoAPI.DAO.AbbreviationDao;
+import AfkoAPI.HTTPResponse;
+import AfkoAPI.Model.Abbreviation;
+import AfkoAPI.Model.Organisation;
 import AfkoAPI.Repository.AbbreviationRepository;
+import AfkoAPI.Repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 public class AbbreviationController {
-
     @Autowired
-    AbbreviationRepository abbrRep;
+    AbbreviationDao dao;
 
     @GetMapping("/")
     public String index() {
-        return "This is a test";
+        return "nothing to see here for now";
     }
 
-//    @GetMapping("/persoon/{fname}")
-//    @ResponseBody
-//    public ResponseEntity<Abbreviation> getItem(@PathVariable String fname){
-//        Optional<Abbreviation> persoon = abbrRep.findById(fname);
-//        return new ResponseEntity<Abbreviation>(persoon.get(), HttpStatus.OK);
+    // todo just temporary to test, replace with post later
+    @GetMapping("/add")
+    public HTTPResponse addAbbreviation() {
+        return dao.addAbbreviation("etc", "et cetera", "69fe9a5e-26fc-46de-96a4-855bde790bfe", null);
+    }
+    @GetMapping("/abbreviation")
+    public HTTPResponse getAbbreviation(@RequestParam(name="id", defaultValue="") String id,
+                                        @RequestParam(name="name", defaultValue="") String name,
+                                        @RequestParam(name="org_id", defaultValue="") String orgId) {
+        // todo remove this if else chain somehow
+        if (!id.equals("")) return dao.getAbbreviationByID(id);
+        else if (!name.equals("")) return dao.getAbbreviationByName(name);
+        else if (!orgId.equals("")) return dao.getAbbreviationByOrgId(orgId);
+        return null;
+    }
+
 }
 
 
