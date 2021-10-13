@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +39,7 @@ public class AbbreviationController {
     //}
     @PostMapping("/abbreviation")
     public HTTPResponse addAbbreviation(@RequestBody AbbreviationRequestObject abbr) {
-        return dao.addAbbreviation(abbr.getName(), abbr.getDescription(), abbr.getOrganisation_id(), abbr.getAccount_id());
+        return dao.addAbbreviation(abbr.getName(), abbr.getDescription(), abbr.getOrganisations(), abbr.getCreatedBy());
     }
 
     @GetMapping("/abbreviation")

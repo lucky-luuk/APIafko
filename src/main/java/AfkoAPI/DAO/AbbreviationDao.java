@@ -30,14 +30,19 @@ public class AbbreviationDao {
         abbrRep.save(abbr);
         return HTTPResponse.<Abbreviation>returnSuccess(abbr);
     }
-    public HTTPResponse addAbbreviation(String name, String description, String orgId, String accountId) {
-        Optional<Organisation> org = orgRep.findById(orgId);
-        Optional<Account> acc = accRep.findById(accountId);
+    public HTTPResponse addAbbreviation(String name, String description, String[] orgIds, String accountId) {
+        ArrayList<Organisation> organisations = new ArrayList<>();
+        for (String id : orgIds)
+        {
+            Optional<Organisation> org = orgRep.findById(id);
+            if (org.isEmpty()) return HTTPResponse.<Abbreviation>returnFailure("organisation with id: " + id + " does not exist");
+            organisations.add(org.get());
+        }
 
-        if (org.isEmpty()) return HTTPResponse.<Abbreviation>returnFailure("organisation with id: " + orgId + " does not exist");
+        Optional<Account> acc = accRep.findById(accountId);
         if (acc.isEmpty()) return HTTPResponse.<Abbreviation>returnFailure("account with id: " + accountId + " does not exist");
 
-        Abbreviation abbr = new Abbreviation(name, description, org.get(), acc.get());
+        Abbreviation abbr = new Abbreviation(name, description, organisations, acc.get());
         abbrRep.save(abbr);
         return HTTPResponse.<Abbreviation>returnSuccess(abbr);
     }

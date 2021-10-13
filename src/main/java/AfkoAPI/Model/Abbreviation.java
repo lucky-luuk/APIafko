@@ -28,10 +28,10 @@ public class Abbreviation {
     // The default constructor exists only for the sake of JPA (https://spring.io/guides/gs/accessing-data-jpa/)
     protected Abbreviation() {}
     // creates a new id, do not use for already existing data!
-    public Abbreviation(String name, String description, Organisation org, Account createdBy) {
+    public Abbreviation(String name, String description, ArrayList<Organisation> orgs, Account createdBy) {
         this.name = name;
         this.description = description;
-        this.organisations.add(org);
+        if (orgs != null) this.organisations = new HashSet<Organisation>(orgs);
         this.isUnderReview = true;
         // for the uuid: https://jivimberg.io/blog/2018/11/05/using-uuid-on-spring-data-jpa-entities/
         this.id = UUID.randomUUID().toString();
