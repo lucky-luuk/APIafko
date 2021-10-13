@@ -33,6 +33,7 @@ public class Abbreviation {
         this.description = description;
         if (orgs != null) this.organisations = new HashSet<Organisation>(orgs);
         this.isUnderReview = true;
+        this.createdBy = createdBy;
         // for the uuid: https://jivimberg.io/blog/2018/11/05/using-uuid-on-spring-data-jpa-entities/
         this.id = UUID.randomUUID().toString();
     }
