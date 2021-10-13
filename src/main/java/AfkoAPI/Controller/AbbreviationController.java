@@ -6,6 +6,7 @@ import AfkoAPI.Model.Abbreviation;
 import AfkoAPI.Model.Organisation;
 import AfkoAPI.Repository.AbbreviationRepository;
 import AfkoAPI.Repository.OrganisationRepository;
+import AfkoAPI.RequestObjects.AbbreviationRequestObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,11 +24,23 @@ public class AbbreviationController {
         return "nothing to see here for now";
     }
 
-    // todo just temporary to test, replace with post later
-    @GetMapping("/add")
-    public HTTPResponse addAbbreviation() {
-        return dao.addAbbreviation("etc", "et cetera", "69fe9a5e-26fc-46de-96a4-855bde790bfe", null);
+    @PostMapping("/dummy_abbreviation")
+    public HTTPResponse addDummyAbbreviation() {
+        return dao.addDummyAbbreviation();
     }
+
+    // todo just temporary to test, replace with post later
+    //{
+    //    "name": "afko",
+    //    "description": "een description",
+    //    "organisation_id": "7e6f0d78-2d20-47dc-a3bf-db273d3e4a51",
+    //    "account_id": "4107694e-eca9-4269-946b-4973460536b1"
+    //}
+    @PostMapping("/abbreviation")
+    public HTTPResponse addAbbreviation(@RequestBody AbbreviationRequestObject abbr) {
+        return dao.addAbbreviation(abbr.getName(), abbr.getDescription(), abbr.getOrganisation_id(), abbr.getAccount_id());
+    }
+
     @GetMapping("/abbreviation")
     public HTTPResponse getAbbreviation(@RequestParam(name="id", defaultValue="") String id,
                                         @RequestParam(name="name", defaultValue="") String name,
