@@ -25,7 +25,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/authenticate",
             "/abbreviation",
             "/register",
-            "/add_org"
+            "/score",
+            "/dummy_abbreviation",
+            "/dummy_score"
+
     };
 
     @Autowired
