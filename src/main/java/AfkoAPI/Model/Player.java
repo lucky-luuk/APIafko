@@ -1,8 +1,10 @@
 package AfkoAPI.Model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 public class Player {
@@ -16,14 +18,16 @@ public class Player {
     @Column(name = "score")
     private int score;
 
-    @OneToMany(cascade = CascadeType.ALL, targetEntity = Organisation.class)
+    @ManyToMany(cascade = CascadeType.ALL, targetEntity = Organisation.class)
     private Set<Organisation> Organisations = new HashSet<>();
 
     protected Player() {}
-    public Player(String name, int score, Set<Organisation> organisations) {
+
+    public Player(String name, int score, ArrayList<Organisation> organisations) {
         this.name = name;
         this.score = score;
-        Organisations = organisations;
+        if (organisations != null) Organisations = new HashSet<Organisation>(organisations);
+        this.id = UUID.randomUUID().toString();
     }
 
     public String getId() {
