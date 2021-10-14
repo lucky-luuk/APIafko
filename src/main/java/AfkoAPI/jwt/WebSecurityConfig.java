@@ -24,7 +24,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String[] UNSECURED_URLS = {
             "/authenticate",
             "/abbreviation",
-            "/register"
+            "/register",
+            "/add_org"
     };
 
     @Autowired

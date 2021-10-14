@@ -5,6 +5,7 @@ import AfkoAPI.Model.Organisation;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class AbbreviationRequestObject {
@@ -14,16 +15,16 @@ public class AbbreviationRequestObject {
 
     private String description;
 
-    private String organisation_id;
+    private String[] organisations;
 
-    private String account_id;
+    private String createdBy;
 
-    public AbbreviationRequestObject(String id, String name, String description, String organisation_id, String account_id) {
+    public AbbreviationRequestObject(String id, String name, String description, String[] organisationIds, String account_id) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.organisation_id = organisation_id;
-        this.account_id = account_id;
+        this.organisations = organisationIds;
+        this.createdBy = account_id;
     }
 
 
@@ -51,19 +52,19 @@ public class AbbreviationRequestObject {
         this.description = description;
     }
 
-    public String getOrganisation_id() {
-        return organisation_id;
+    public String[] getOrganisations() {
+        return organisations;
     }
 
-    public void setOrganisation_id(String organisation_id) {
-        this.organisation_id = organisation_id;
+    public void setOrganisations(String[] organisations) {
+        this.organisations = organisations;
     }
 
-    public String getAccount_id() {
-        return account_id;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public void setAccount_id(String account_id) {
-        this.account_id = account_id;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }
