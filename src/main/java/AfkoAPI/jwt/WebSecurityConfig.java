@@ -18,12 +18,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+
+//TODO Remove tutorial commants
+
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     // define urls that dont need jwt token
     public static final String[] unsecuredUrls = {
             "/authenticate",
-            "/abbreviation"
+            "/abbreviation",
+            "/organisation"
     };
 
     @Autowired

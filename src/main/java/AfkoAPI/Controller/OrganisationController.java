@@ -1,5 +1,6 @@
 package AfkoAPI.Controller;
 
+import AfkoAPI.DAO.OrganisationDao;
 import AfkoAPI.HTTPResponse;
 import AfkoAPI.Model.Abbreviation;
 import AfkoAPI.Model.Organisation;
@@ -19,6 +20,9 @@ public class OrganisationController {
     @Autowired
     OrganisationRepository orgRep;
 
+    @Autowired
+    OrganisationDao dau;
+
     // todo just a temp method to add an organisation, should be replaced with a post later
     @GetMapping("/add_org")
     public HTTPResponse addAbbreviation(@RequestParam(name="name", defaultValue="") String name) {
@@ -29,11 +33,17 @@ public class OrganisationController {
 
     // todo literally the same code as in AbbreviationController
     @GetMapping("/organisation")
-    public HTTPResponse getAbbreviation(@RequestParam(name="id", defaultValue="") String id,
-                                        @RequestParam(name="name", defaultValue="") String name) {
+    public HTTPResponse getOrganisation(@RequestParam(name="id", defaultValue="") String id,
+                                        @RequestParam(name="name", defaultValue="") String name,
+                                        @RequestParam(name="all", defaultValue="") String all){
         if (!id.equals("")) return getOrganisationByID(id);
         else if (!name.equals("")) return getOrganisationByName(name);
+        else if (!all.equals("")) return getOrganisationAll();
         return null;
+    }
+
+    private HTTPResponse getOrganisationAll() {
+        return dau.getAllOrganisationData();
     }
     private HTTPResponse getOrganisationByID(String id) {
         Optional<Organisation> data = orgRep.findById(id);
