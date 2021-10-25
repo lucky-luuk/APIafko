@@ -25,5 +25,9 @@ public class OrganisationDao {
         return HTTPResponse.<List<Organisation>>returnSuccess(data);
     }
 
+    public Iterable<Organisation> save(List<Organisation> org) {
+        return orgRep.saveAll(org);
+    }
+
 
 }
