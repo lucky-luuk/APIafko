@@ -14,5 +14,4 @@ public interface AbbreviationRepository extends JpaRepository<Abbreviation, Stri
 
     List<Abbreviation> findByNameStartsWith(String name);
 
-//    List<Abbreviation> saveList(List<Abbreviation>List<Abbreviation> abbreviations);
 }
