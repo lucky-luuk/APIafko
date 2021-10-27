@@ -24,10 +24,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     // define urls that dont need jwt token
-    public static final String[] unsecuredUrls = {
+    public static final String[] UNSECURED_URLS = {
             "/authenticate",
             "/abbreviation",
             "/organisation"
+            "/register",
+            "/score",
+            "/dummy_abbreviation",
+            "/dummy_score"
+
     };
 
     @Autowired
@@ -63,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // We don't need CSRF for this example
         httpSecurity.csrf().disable()
                 // dont authenticate these requests
-                .authorizeRequests().antMatchers(unsecuredUrls).permitAll().
+                .authorizeRequests().antMatchers(UNSECURED_URLS).permitAll().
                 // all other requests need to be authenticated
                         anyRequest().authenticated().and().
                 // make sure we use stateless session; session won't be used to

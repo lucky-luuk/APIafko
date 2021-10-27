@@ -5,6 +5,7 @@ import AfkoAPI.Model.Abbreviation;
 import AfkoAPI.Model.Account;
 import AfkoAPI.Model.Organisation;
 import AfkoAPI.Repository.AbbreviationRepository;
+import AfkoAPI.Repository.AccountRepository;
 import AfkoAPI.Repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,14 +20,29 @@ public class AbbreviationDao {
     AbbreviationRepository abbrRep;
     @Autowired
     OrganisationRepository orgRep;
+    @Autowired
+    AccountRepository accRep;
 
     public AbbreviationDao() {}
 
-    public HTTPResponse addAbbreviation(String name, String description, String orgId, Account account) {
-        Optional<Organisation> org = orgRep.findById(orgId);
-        if (org.isEmpty()) return HTTPResponse.<Abbreviation>returnFailure("organisation with id: " + orgId + " does not exist");
+    public HTTPResponse addDummyAbbreviation() {
+        Abbreviation abbr = new Abbreviation("dummy", "dit is een fake abbreviation", null, null);
+        abbrRep.save(abbr);
+        return HTTPResponse.<Abbreviation>returnSuccess(abbr);
+    }
+    public HTTPResponse addAbbreviation(String name, String description, String[] orgIds, String accountId) {
+        ArrayList<Organisation> organisations = new ArrayList<>();
+        for (String id : orgIds)
+        {
+            Optional<Organisation> org = orgRep.findById(id);
+            if (org.isEmpty()) return HTTPResponse.<Abbreviation>returnFailure("organisation with id: " + id + " does not exist");
+            organisations.add(org.get());
+        }
 
-        Abbreviation abbr = new Abbreviation(name, description, org.get(), account);
+        Optional<Account> acc = accRep.findById(accountId);
+        if (acc.isEmpty()) return HTTPResponse.<Abbreviation>returnFailure("account with id: " + accountId + " does not exist");
+
+        Abbreviation abbr = new Abbreviation(name, description, organisations, acc.get());
         abbrRep.save(abbr);
         return HTTPResponse.<Abbreviation>returnSuccess(abbr);
     }
@@ -42,6 +58,7 @@ public class AbbreviationDao {
             return HTTPResponse.<Abbreviation>returnFailure("could not find id: " + id);
         return HTTPResponse.<Abbreviation>returnSuccess(data.get());
     }
+
     public HTTPResponse getAbbreviationByName(String name) {
         List<Abbreviation> data = abbrRep.findByNameStartsWith(name);
         if (data.isEmpty()) return HTTPResponse.<List<Abbreviation>>returnFailure("could not find name: " + name);

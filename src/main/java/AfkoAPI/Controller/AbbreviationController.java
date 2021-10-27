@@ -6,8 +6,12 @@ import AfkoAPI.Model.Abbreviation;
 import AfkoAPI.Model.Organisation;
 import AfkoAPI.Repository.AbbreviationRepository;
 import AfkoAPI.Repository.OrganisationRepository;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import AfkoAPI.RequestObjects.AbbreviationRequestObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +20,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,22 +34,28 @@ public class AbbreviationController {
         return "nothing to see here for now";
     }
 
-    // todo just temporary to test, replace with post later
-    @GetMapping("/add")
-    public HTTPResponse addAbbreviation() {
-        return dao.addAbbreviation("etc", "et cetera", "69fe9a5e-26fc-46de-96a4-855bde790bfe", null);
+    @PostMapping("/dummy_abbreviation")
+    public HTTPResponse addDummyAbbreviation() {
+        return dao.addDummyAbbreviation();
     }
 
+
+    @PostMapping("/abbreviation")
+    public HTTPResponse addAbbreviation(@RequestBody AbbreviationRequestObject abbr) {
+        return dao.addAbbreviation(abbr.getName(), abbr.getDescription(), abbr.getOrganisations(), abbr.getCreatedBy());
+    }
 
     @GetMapping("/abbreviation")
     public HTTPResponse getAbbreviation(@RequestParam(name="id", defaultValue="") String id,
                                         @RequestParam(name="name", defaultValue="") String name,
                                         @RequestParam(name="org_id", defaultValue="") String orgId) {
-        // todo remove this if else chain somehow
+
         if (!id.equals("")) return dao.getAbbreviationByID(id);
         else if (!name.equals("")) return dao.getAbbreviationByName(name);
         else if (!orgId.equals("")) return dao.getAbbreviationByOrgId(orgId);
-        return null;
+        return HTTPResponse.returnFailure("all fields are empty");
+
+
     }
 
 }
