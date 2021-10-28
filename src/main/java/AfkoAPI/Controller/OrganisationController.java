@@ -6,10 +6,9 @@ import AfkoAPI.Model.Abbreviation;
 import AfkoAPI.Model.Organisation;
 import AfkoAPI.Repository.AbbreviationRepository;
 import AfkoAPI.Repository.OrganisationRepository;
+import AfkoAPI.RequestObjects.OrganisationRequestObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,9 +23,9 @@ public class OrganisationController {
     OrganisationDao dau;
 
     // todo just a temp method to add an organisation, should be replaced with a post later
-    @GetMapping("/add_org")
-    public HTTPResponse addAbbreviation(@RequestParam(name="name", defaultValue="") String name, String id) {
-        Organisation org = new Organisation(name, id);
+    @PostMapping("/organisation")
+    public HTTPResponse addOrganisation(@RequestBody OrganisationRequestObject o) {
+        Organisation org = new Organisation(o.getName(), o.getId());
         orgRep.save(org);
         return HTTPResponse.<Organisation>returnSuccess(org);
     }
