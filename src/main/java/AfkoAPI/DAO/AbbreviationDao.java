@@ -10,6 +10,7 @@ import AfkoAPI.Repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +48,10 @@ public class AbbreviationDao {
         return HTTPResponse.<Abbreviation>returnSuccess(abbr);
     }
 
+    public Iterable<Abbreviation> save(List<Abbreviation> abbreviations) {
+        return abbrRep.saveAll(abbreviations);
+    }
+
     public HTTPResponse getAbbreviationByID(String id) {
         Optional<Abbreviation> data = abbrRep.findById(id);
 
@@ -56,8 +61,7 @@ public class AbbreviationDao {
     }
 
     public HTTPResponse getAbbreviationByName(String name) {
-        List<Abbreviation> data = abbrRep.findByName(name);
-
+        List<Abbreviation> data = abbrRep.findByNameStartsWith(name);
         if (data.isEmpty()) return HTTPResponse.<List<Abbreviation>>returnFailure("could not find name: " + name);
         return HTTPResponse.<List<Abbreviation>>returnSuccess(data);
     }
@@ -65,6 +69,14 @@ public class AbbreviationDao {
         List<Abbreviation> data = abbrRep.findByOrganisations_id(orgId);
 
         if (data.isEmpty()) return HTTPResponse.<List<Abbreviation>>returnFailure("could not find organisation id: " + orgId);
+
+        return HTTPResponse.<List<Abbreviation>>returnSuccess(data);
+    }
+
+    public HTTPResponse getAbbreviationByReported(boolean reported) {
+        List<Abbreviation> data = abbrRep.findByIsUnderReview(reported);
+
+        if (data.isEmpty()) return HTTPResponse.<List<Abbreviation>>returnFailure("could not find reported abbreviations: " + reported);
 
         return HTTPResponse.<List<Abbreviation>>returnSuccess(data);
     }
