@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,6 +69,14 @@ public class AbbreviationDao {
         List<Abbreviation> data = abbrRep.findByOrganisations_id(orgId);
 
         if (data.isEmpty()) return HTTPResponse.<List<Abbreviation>>returnFailure("could not find organisation id: " + orgId);
+
+        return HTTPResponse.<List<Abbreviation>>returnSuccess(data);
+    }
+
+    public HTTPResponse getAbbreviationByReported(boolean reported) {
+        List<Abbreviation> data = abbrRep.findByIsUnderReview(reported);
+
+        if (data.isEmpty()) return HTTPResponse.<List<Abbreviation>>returnFailure("could not find reported abbreviations: " + reported);
 
         return HTTPResponse.<List<Abbreviation>>returnSuccess(data);
     }
