@@ -39,11 +39,15 @@ public class AbbreviationDao {
             if (org.isEmpty()) return HTTPResponse.<Abbreviation>returnFailure("organisation with id: " + id + " does not exist");
             organisations.add(org.get());
         }
+        // make it possible to not add an account
+        Account acc = null;
+        if (!accountId.equals("null")) {
+            Optional<Account> optAcc = accRep.findById(accountId);
+            if (optAcc.isEmpty()) return HTTPResponse.<Abbreviation>returnFailure("account with id: " + accountId + " does not exist");
+            else acc = optAcc.get();
+        }
 
-        Optional<Account> acc = accRep.findById(accountId);
-        if (acc.isEmpty()) return HTTPResponse.<Abbreviation>returnFailure("account with id: " + accountId + " does not exist");
-
-        Abbreviation abbr = new Abbreviation(name, description, organisations, acc.get());
+        Abbreviation abbr = new Abbreviation(name, description, organisations, acc);
         abbrRep.save(abbr);
         return HTTPResponse.<Abbreviation>returnSuccess(abbr);
     }
