@@ -24,7 +24,7 @@ public class StartupUility implements CommandLineRunner {
     private OrganisationDao OrgDao;
 
     public void run(String... args) throws Exception {
-        addAbbr();
+//        addAbbr();
 //        addOrg();
 
         
