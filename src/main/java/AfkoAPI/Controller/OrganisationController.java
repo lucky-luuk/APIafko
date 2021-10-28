@@ -25,8 +25,8 @@ public class OrganisationController {
 
     // todo just a temp method to add an organisation, should be replaced with a post later
     @GetMapping("/add_org")
-    public HTTPResponse addAbbreviation(@RequestParam(name="name", defaultValue="") String name) {
-        Organisation org = new Organisation(name);
+    public HTTPResponse addAbbreviation(@RequestParam(name="name", defaultValue="") String name, String id) {
+        Organisation org = new Organisation(name, id);
         orgRep.save(org);
         return HTTPResponse.<Organisation>returnSuccess(org);
     }
