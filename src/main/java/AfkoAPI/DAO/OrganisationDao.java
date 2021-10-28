@@ -27,7 +27,7 @@ public class OrganisationDao {
         return HTTPResponse.<List<Organisation>>returnSuccess(data);
     }
 
-    public HTTPResponse addOrganisationsBulk(OrganisationRequestObject[] orgs) {
+    public HTTPResponse addOrganisationsWithIds(OrganisationRequestObject[] orgs) {
         Organisation[] organisations = new Organisation[orgs.length];
         for (OrganisationRequestObject o : orgs) {
             addOrganisation(o.getName(), o.getId());

@@ -2,16 +2,11 @@ package AfkoAPI.Controller;
 
 import AfkoAPI.DAO.OrganisationDao;
 import AfkoAPI.HTTPResponse;
-import AfkoAPI.Model.Abbreviation;
-import AfkoAPI.Model.Organisation;
-import AfkoAPI.Repository.AbbreviationRepository;
 import AfkoAPI.Repository.OrganisationRepository;
 import AfkoAPI.RequestObjects.OrganisationRequestObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
 // localhost:8080/add_org
 @RestController
 public class OrganisationController {
@@ -26,9 +21,9 @@ public class OrganisationController {
     public HTTPResponse addOrganisation(@RequestBody OrganisationRequestObject[] o) {
         return dao.addOrganisations(o);
     }
-    @PostMapping("/organisation_bulk")
+    @PostMapping("/organisation_with_id")
     public HTTPResponse addOrganisationBulk(@RequestBody OrganisationRequestObject[] o) {
-        return dao.addOrganisationsBulk(o);
+        return dao.addOrganisationsWithIds(o);
     }
 
     // todo literally the same code as in AbbreviationController
