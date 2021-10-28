@@ -25,7 +25,7 @@ public class StartupUility implements CommandLineRunner {
 
     public void run(String... args) throws Exception {
         addAbbr();
-        addOrg();
+//        addOrg();
 
         
     }
@@ -44,7 +44,7 @@ public class StartupUility implements CommandLineRunner {
     public void addAbbr() {
         ObjectMapper mapper = new ObjectMapper();
         TypeReference<List<Abbreviation>> typeReference = new TypeReference<List<Abbreviation>>(){};
-        InputStream inputStream = TypeReference.class.getResourceAsStream("/json/abbr_twee.json");
+        InputStream inputStream = TypeReference.class.getResourceAsStream("/json/abbr_drie_4.json");
         try{
             List<Abbreviation> users = mapper.readValue(inputStream,typeReference);
             AbbrDao.save(users);

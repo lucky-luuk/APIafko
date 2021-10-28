@@ -15,8 +15,9 @@ public class Organisation {
     private String name;
 
     protected Organisation() {}
-    public Organisation(String name) {
-        this.id = UUID.randomUUID().toString();
+    public Organisation(String name, String id) {
+//        UUID.randomUUID().toString()
+        this.id = id;
         this.name = name;
     }
 
