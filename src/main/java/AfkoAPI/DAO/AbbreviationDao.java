@@ -7,6 +7,7 @@ import AfkoAPI.Model.Organisation;
 import AfkoAPI.Repository.AbbreviationRepository;
 import AfkoAPI.Repository.AccountRepository;
 import AfkoAPI.Repository.OrganisationRepository;
+import AfkoAPI.RequestObjects.AbbreviationRequestObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +32,19 @@ public class AbbreviationDao {
         abbrRep.save(abbr);
         return HTTPResponse.<Abbreviation>returnSuccess(abbr);
     }
+    public HTTPResponse addAbbreviations(AbbreviationRequestObject[] abbreviationRequestObjects) {
+        Abbreviation[] abbrs = new Abbreviation[abbreviationRequestObjects.length];
+        for (int i = 0; i < abbreviationRequestObjects.length; i++) {
+            HTTPResponse response = addAbbreviation(abbreviationRequestObjects[i].getName(),
+                    abbreviationRequestObjects[i].getDescription(),
+                    abbreviationRequestObjects[i].getOrganisations(),
+                    abbreviationRequestObjects[i].getCreatedBy());
+            if (response.getResponse().equals("SUCCESS")) abbrs[i] = (Abbreviation) response.getData();
+            else return HTTPResponse.<Abbreviation[]>returnFailure(response.getError());
+        }
+        return HTTPResponse.<Abbreviation[]>returnSuccess(abbrs);
+    }
+
     public HTTPResponse addAbbreviation(String name, String description, String[] orgIds, String accountId) {
         ArrayList<Organisation> organisations = new ArrayList<>();
         for (String id : orgIds)

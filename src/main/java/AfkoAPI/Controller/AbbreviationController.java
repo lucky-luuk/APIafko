@@ -41,8 +41,8 @@ public class AbbreviationController {
 
 
     @PostMapping("/abbreviation")
-    public HTTPResponse addAbbreviation(@RequestBody AbbreviationRequestObject abbr) {
-        return dao.addAbbreviation(abbr.getName(), abbr.getDescription(), abbr.getOrganisations(), abbr.getCreatedBy());
+    public HTTPResponse addAbbreviation(@RequestBody AbbreviationRequestObject[] abbrs) {
+        return dao.addAbbreviations(abbrs);
     }
 
     @GetMapping("/abbreviation")
