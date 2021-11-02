@@ -21,9 +21,10 @@ public class OrganisationController {
     public HTTPResponse addOrganisation(@RequestBody OrganisationRequestObject[] o) {
         return dao.addOrganisations(o);
     }
+
     @PostMapping("/organisation_with_id")
     public HTTPResponse addOrganisationBulk(@RequestBody OrganisationRequestObject[] o) {
-        return dao.addOrganisationsWithIds(o);
+        return dao.addOrganisations(o);
     }
 
     // todo literally the same code as in AbbreviationController

@@ -3,7 +3,6 @@ package AfkoAPI.jwt;
 import AfkoAPI.DAO.AccountDao;
 import AfkoAPI.Model.Account;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -34,6 +33,6 @@ public class JwtUserDetailsService implements UserDetailsService {
     }
 
     public void saveAccount(Account account) {
-        accountDao.save(account);
+        accountDao.addAccount(account);
     }
 }

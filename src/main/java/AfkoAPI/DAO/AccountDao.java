@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AccountDao {
+
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
@@ -32,12 +33,16 @@ public class AccountDao {
     private AccountRepository accountRepository;
 
 
-    public Account save(Account account) {
-        return accountRepository.save(account);
+    public void addAccount(Account account) {
+        accountRepository.save(account);
     }
-    public Account findByEmail(String email) { return accountRepository.findByemail(email); }
 
-    public HTTPResponse registerAccount(String firstName, String lastName, String email, String password){
+    public Account findByEmail(String email) {
+        return accountRepository.findByemail(email);
+    }
+
+    public HTTPResponse registerAccount(String firstName, String lastName, String email, String password) {
+
         if (firstName.equals("") || lastName.equals("") || email.equals("") || password.equals(""))
             return HTTPResponse.<Account>returnFailure("one ore more required parameters were empty");
         else if (findByEmail(email) != null)
@@ -47,6 +52,7 @@ public class AccountDao {
         userDetailsService.saveAccount(a);
         return HTTPResponse.<Account>returnSuccess(a);
     }
+
     /** authenticates an account
      * @param authenticationRequest the data to authenticate with
      * @return failure or success
@@ -55,7 +61,6 @@ public class AccountDao {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     authenticationRequest.getUsername(), authenticationRequest.getPassword()));
-
         } catch (DisabledException e) {
             return HTTPResponse.<JwtResponse>returnUserDisabled("user: " + authenticationRequest.getUsername() + " is disabled");
 

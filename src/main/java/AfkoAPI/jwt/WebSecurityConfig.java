@@ -31,7 +31,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/register",
             "/score",
             "/dummy_abbreviation",
-            "/dummy_score"
+            "/dummy_score",
+            "/organisation_with_id"
 
     };
 
