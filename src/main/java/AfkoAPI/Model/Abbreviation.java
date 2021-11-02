@@ -1,5 +1,7 @@
 package AfkoAPI.Model;
 
+import AfkoAPI.RequestObjects.AbbreviationRequestObject;
+
 import javax.persistence.*;
 import java.util.*;
 
@@ -32,12 +34,12 @@ public class Abbreviation {
         this.name = name;
         this.description = description;
         if (orgs != null) this.organisations = new HashSet<Organisation>(orgs);
+        // always true, a new abbreviation must always be checked by an admin
         this.isUnderReview = true;
         this.createdBy = createdBy;
         // for the uuid: https://jivimberg.io/blog/2018/11/05/using-uuid-on-spring-data-jpa-entities/
         this.id = UUID.randomUUID().toString();
     }
-
 
     public String getId() {
         return id.toString();

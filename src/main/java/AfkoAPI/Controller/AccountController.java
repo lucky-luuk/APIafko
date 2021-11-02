@@ -3,6 +3,7 @@ package AfkoAPI.Controller;
 import AfkoAPI.DAO.AccountDao;
 import AfkoAPI.HTTPResponse;
 import AfkoAPI.Model.Account;
+import AfkoAPI.RequestObjects.AccountRequestObject;
 import AfkoAPI.jwt.JwtRequest;
 import AfkoAPI.jwt.JwtTokenUtil;
 import AfkoAPI.jwt.JwtResponse;
@@ -36,13 +37,10 @@ public class AccountController {
      */
     // todo should this use params or a body?
     @PostMapping("/register")
-    public HTTPResponse registerAccount(@RequestParam(name = "first_name") String firstName,
-                                        @RequestParam(name = "last_name") String lastName,
-                                        @RequestParam(name = "email") String email,
-                                        @RequestParam(name = "password") String password) {
+    public HTTPResponse registerAccount(@RequestBody AccountRequestObject o) {
 
 
-        return accountDao.registerAccount(firstName, lastName, email, password);
+        return accountDao.registerAccount(o.getFirstName(), o.getLastName(), o.getEmail(), o.getPassword());
     }
 
 

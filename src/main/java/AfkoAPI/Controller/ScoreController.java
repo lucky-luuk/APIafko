@@ -18,10 +18,6 @@ public class ScoreController {
     @GetMapping("/score")
     public HTTPResponse getScoreFromScoreBoard() {return dao.getScoreList();}
 
-    @PostMapping("/dummy_score")
-    public HTTPResponse addDummyScore() {return dao.addDummyScore();}
-
-
     @PostMapping("/score")
     public HTTPResponse addScore(@RequestBody ScoreRequestObject score) {
         return dao.addScore(score.getName(),score.getScore(),score.getOrganisation_id());}

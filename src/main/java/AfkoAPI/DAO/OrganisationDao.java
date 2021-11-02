@@ -1,11 +1,10 @@
 package AfkoAPI.DAO;
 
 import AfkoAPI.HTTPResponse;
-import AfkoAPI.Model.Abbreviation;
 import AfkoAPI.Model.Organisation;
-import AfkoAPI.Repository.AccountRepository;
 import AfkoAPI.Repository.OrganisationRepository;
 import AfkoAPI.RequestObjects.OrganisationRequestObject;
+import AfkoAPI.services.OrganisationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,34 +26,13 @@ public class OrganisationDao {
         return HTTPResponse.<List<Organisation>>returnSuccess(data);
     }
 
-    public HTTPResponse addOrganisationsWithIds(OrganisationRequestObject[] orgs) {
-        Organisation[] organisations = new Organisation[orgs.length];
-        for (OrganisationRequestObject o : orgs) {
-            addOrganisation(o.getName(), o.getId());
-        }
-        return HTTPResponse.<Organisation[]>returnSuccess(organisations);
-    }
-
     public HTTPResponse addOrganisations(OrganisationRequestObject[] orgs) {
-        Organisation[] organisations = new Organisation[orgs.length];
-        for (OrganisationRequestObject o : orgs) {
-            addOrganisation(o.getName());
-        }
-        return HTTPResponse.<Organisation[]>returnSuccess(organisations);
+        return OrganisationService.addOrganisations(orgRep, orgs);
     }
 
-    public HTTPResponse addOrganisation(String name, String id) {
-        Organisation org = new Organisation(name, id);
-        orgRep.save(org);
-        return HTTPResponse.<Organisation>returnSuccess(org);
+    public HTTPResponse addOrganisationsGenerateId(OrganisationRequestObject[] orgs) {
+        return OrganisationService.addOrganisationsGenerateId(orgRep, orgs);
     }
-
-    public HTTPResponse addOrganisation(String name) {
-        Organisation org = new Organisation(name);
-        orgRep.save(org);
-        return HTTPResponse.<Organisation>returnSuccess(org);
-    }
-
 
     public HTTPResponse getOrganisationByID(String id) {
         Optional<Organisation> data = orgRep.findById(id);

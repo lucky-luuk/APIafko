@@ -27,16 +27,6 @@ public class ScoreDao {
         return HTTPResponse.returnSuccess(data);
     }
 
-
-    public HTTPResponse addDummyScore(){
-        Organisation org = orgRep.getById("00905acd-5ddf-468c-b88f-4d4ab2827b9b");
-                ArrayList<Organisation> orgs = new ArrayList<>();
-        orgs.add(org);
-        Player player = new Player("Roeland",9000, null);
-        scoreRep.save(player);
-        return HTTPResponse.<Player>returnSuccess(player);
-    }
-
     public HTTPResponse addScore(String name,Integer score, String orgId) {
         Optional<Organisation> org = orgRep.findById(orgId);
 

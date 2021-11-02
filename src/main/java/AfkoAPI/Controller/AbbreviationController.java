@@ -34,12 +34,6 @@ public class AbbreviationController {
         return "nothing to see here for now";
     }
 
-    @PostMapping("/dummy_abbreviation")
-    public HTTPResponse addDummyAbbreviation() {
-        return dao.addDummyAbbreviation();
-    }
-
-
     @PostMapping("/abbreviation")
     public HTTPResponse addAbbreviation(@RequestBody AbbreviationRequestObject[] abbrs) {
         return dao.addAbbreviations(abbrs);
