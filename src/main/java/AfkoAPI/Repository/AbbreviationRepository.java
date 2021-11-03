@@ -16,4 +16,5 @@ public interface AbbreviationRepository extends JpaRepository<Abbreviation, Stri
 
     List<Abbreviation> findByIsUnderReview(boolean isUnderReview);
 
+
 }

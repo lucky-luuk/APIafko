@@ -8,6 +8,7 @@ import AfkoAPI.Repository.AbbreviationRepository;
 import AfkoAPI.Repository.AccountRepository;
 import AfkoAPI.Repository.OrganisationRepository;
 import AfkoAPI.RequestObjects.AbbreviationRequestObject;
+import AfkoAPI.services.AbbreviationService;
 import AfkoAPI.services.AccountService;
 import AfkoAPI.services.OrganisationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,8 +70,9 @@ public class AbbreviationDao {
         return HTTPResponse.<Abbreviation>returnSuccess(data.get());
     }
 
-    public HTTPResponse getAbbreviationByName(String name) {
+    public HTTPResponse getAbbreviationByName(String name, String amount) {
         List<Abbreviation> data = abbrRep.findByNameStartsWith(name);
+        data = AbbreviationService.trimListByAmount(data, amount);
 
         if (data.isEmpty())
             return HTTPResponse.<List<Abbreviation>>returnFailure("could not find name: " + name);
@@ -78,8 +80,9 @@ public class AbbreviationDao {
         return HTTPResponse.<List<Abbreviation>>returnSuccess(data);
     }
 
-    public HTTPResponse getAbbreviationByOrgId(String orgId) {
+    public HTTPResponse getAbbreviationByOrgId(String orgId, String amount) {
         List<Abbreviation> data = abbrRep.findByOrganisations_id(orgId);
+        data = AbbreviationService.trimListByAmount(data, amount);
 
         if (data.isEmpty())
             return HTTPResponse.<List<Abbreviation>>returnFailure("could not find organisation id: " + orgId);
@@ -87,8 +90,9 @@ public class AbbreviationDao {
         return HTTPResponse.<List<Abbreviation>>returnSuccess(data);
     }
 
-    public HTTPResponse getAbbreviationByReported(boolean reported) {
+    public HTTPResponse getAbbreviationByReported(boolean reported, String amount) {
         List<Abbreviation> data = abbrRep.findByIsUnderReview(reported);
+        data = AbbreviationService.trimListByAmount(data, amount);
 
         if (data.isEmpty())
             return HTTPResponse.<List<Abbreviation>>returnFailure("could not find reported abbreviations: " + reported);
