@@ -43,12 +43,13 @@ public class AbbreviationController {
     public HTTPResponse getAbbreviation(@RequestParam(name="id", defaultValue="") String id,
                                         @RequestParam(name="under_review", defaultValue = "") String reported,
                                         @RequestParam(name="name", defaultValue="") String name,
-                                        @RequestParam(name="org_id", defaultValue="") String orgId) {
+                                        @RequestParam(name="org_id", defaultValue="") String orgId,
+                                        @RequestParam(name="max_amount", defaultValue="") String amount) {
 
         if (!id.equals("")) return dao.getAbbreviationByID(id);
-        else if (!name.equals("")) return dao.getAbbreviationByName(name);
-        else if (!orgId.equals("")) return dao.getAbbreviationByOrgId(orgId);
-        else if (!reported.equals("")) return dao.getAbbreviationByReported(Boolean.parseBoolean(reported));
+        else if (!name.equals("")) return dao.getAbbreviationByName(name, amount);
+        else if (!orgId.equals("")) return dao.getAbbreviationByOrgId(orgId, amount);
+        else if (!reported.equals("")) return dao.getAbbreviationByReported(Boolean.parseBoolean(reported), amount);
         return HTTPResponse.returnFailure("all fields are empty");
 
 
