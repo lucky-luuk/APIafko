@@ -41,6 +41,17 @@ public class Abbreviation {
         this.id = UUID.randomUUID().toString();
     }
 
+    public Abbreviation(String name, String description, Set<Organisation> orgs, Account createdBy) {
+        this.name = name;
+        this.description = description;
+        if (orgs != null) this.organisations = orgs;
+        // always true, a new abbreviation must always be checked by an admin
+        this.isUnderReview = true;
+        this.createdBy = createdBy;
+        // for the uuid: https://jivimberg.io/blog/2018/11/05/using-uuid-on-spring-data-jpa-entities/
+        this.id = UUID.randomUUID().toString();
+    }
+
     public String getId() {
         return id.toString();
     }
@@ -67,5 +78,27 @@ public class Abbreviation {
         organisations.add(org);
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setOrganisations(Set<Organisation> organisations) {
+        this.organisations = organisations;
+    }
+
+    public void setCreatedBy(Account createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public void setUnderReview(boolean underReview) {
+        isUnderReview = underReview;
+    }
 }

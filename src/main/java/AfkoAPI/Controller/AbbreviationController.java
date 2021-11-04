@@ -35,8 +35,21 @@ public class AbbreviationController {
     }
 
     @PostMapping("/abbreviation")
-    public HTTPResponse addAbbreviation(@RequestBody AbbreviationRequestObject[] abbrs) {
+    public HTTPResponse addAbbreviation(@RequestBody Abbreviation[] abbrs) {
         return dao.addAbbreviations(abbrs);
+    }
+
+    @PutMapping("/abbreviation")
+    public HTTPResponse changeAbbreviation(@RequestBody Abbreviation[] abbrs){
+        if (abbrs.length ==2){
+            return dao.changeAbbreviationById(abbrs);
+        }
+        return HTTPResponse.returnFailure("input length is not 2");
+    }
+
+    @DeleteMapping("/abbreviation")
+    public HTTPResponse deleteAbbreviation(@RequestBody Abbreviation[] abbrs){
+        return dao.deleteAbbreviations(abbrs);
     }
 
     @GetMapping("/abbreviation")
