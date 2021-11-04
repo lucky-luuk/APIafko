@@ -15,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class AbbreviationDao {
@@ -28,9 +26,10 @@ public class AbbreviationDao {
     @Autowired
     AccountRepository accRep;
 
-    public AbbreviationDao() {}
+    public AbbreviationDao() {
+    }
 
-    public HTTPResponse addAbbreviations(AbbreviationRequestObject[] abbreviationRequestObjects) {
+    public HTTPResponse addAbbreviations(Abbreviation[] abbreviationRequestObjects) {
         Abbreviation[] abbrs = new Abbreviation[abbreviationRequestObjects.length];
 
         for (int i = 0; i < abbreviationRequestObjects.length; i++) {
@@ -45,18 +44,9 @@ public class AbbreviationDao {
         return HTTPResponse.<Abbreviation[]>returnSuccess(abbrs);
     }
 
-    public HTTPResponse addAbbreviation(AbbreviationRequestObject abbr) {
+    public HTTPResponse addAbbreviation(Abbreviation abbr) {
 
-        HTTPResponse<Organisation[]> response = OrganisationService.getOrganisationsByIds(orgRep, abbr.getOrganisations());
-        if (!response.isSuccess())
-            return HTTPResponse.<Abbreviation>returnFailure(response.getError());
-
-        // make it possible to not add an account
-        HTTPResponse<Account> accountResponse = AccountService.getAccountIfIdNotNull(accRep, abbr.getCreatedBy());
-        if (!accountResponse.isSuccess())
-            return HTTPResponse.<Abbreviation>returnFailure(accountResponse.getError());
-
-        Abbreviation a = new Abbreviation(abbr.getName(), abbr.getDescription(), new ArrayList<Organisation>(List.of(response.getData())), accountResponse.getData());
+        Abbreviation a = new Abbreviation(abbr.getName(), abbr.getDescription(), abbr.getOrganisations(), abbr.getCreatedBy());
         abbrRep.save(a);
         return HTTPResponse.<Abbreviation>returnSuccess(a);
     }
@@ -99,4 +89,31 @@ public class AbbreviationDao {
 
         return HTTPResponse.<List<Abbreviation>>returnSuccess(data);
     }
+
+    public HTTPResponse changeAbbreviationById(Abbreviation[] abbrs) { //neemt 2 abbreviation vervang de 1e voor de ander
+        Abbreviation old = abbrs[0];
+        Abbreviation newObject = abbrs[1];
+        Optional<Abbreviation> abbr = abbrRep.findById(old.getId());
+
+        if (abbr.isEmpty()){
+            return HTTPResponse.<Abbreviation[]>returnFailure("could not find abbreviation with id: " + old.getId());
+        }
+
+        abbr.get().setName(newObject.getName());
+        abbr.get().setCreatedBy(newObject.getCreatedBy());
+        abbr.get().setDescription(newObject.getDescription());
+        abbr.get().setOrganisations(newObject.getOrganisations());
+        abbr.get().setUnderReview(newObject.isUnderReview());
+        abbrRep.save(abbr.get());
+        return HTTPResponse.<Abbreviation[]>returnSuccess(abbrs);
+    }
+
+
+    public HTTPResponse deleteAbbreviations(Abbreviation[] abbrs){
+        for (Abbreviation abbr: abbrs){
+            abbrRep.deleteById(abbr.getId());
+        }
+        return HTTPResponse.returnSuccess(abbrs);
+    }
 }
+
