@@ -27,7 +27,7 @@ public class AccountController {
      * @param authenticationRequest json:  {"username": "", "password": ""}
      * @return success or failure
      */
-    @GetMapping("/authenticate")
+    @PostMapping("/authenticate")
     public HTTPResponse createAuthToken(@RequestBody JwtRequest authenticationRequest) {
         return accountDao.authenticate(authenticationRequest);
     }
@@ -35,11 +35,8 @@ public class AccountController {
     /**
      * creates a new account
      */
-    // todo should this use params or a body?
     @PostMapping("/register")
     public HTTPResponse registerAccount(@RequestBody AccountRequestObject o) {
-
-
         return accountDao.registerAccount(o.getFirstName(), o.getLastName(), o.getEmail(), o.getPassword());
     }
 

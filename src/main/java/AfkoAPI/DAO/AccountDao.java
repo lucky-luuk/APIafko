@@ -41,6 +41,13 @@ public class AccountDao {
         return accountRepository.findByemail(email);
     }
 
+    /** register a new accoutn with the following information
+     * @param firstName the first name
+     * @param lastName the last name
+     * @param email the email of the account, used to log in
+     * @param password the encrypted password used by the account
+     * @return an HTTPResponse containing the created account
+     */
     public HTTPResponse registerAccount(String firstName, String lastName, String email, String password) {
 
         if (firstName.equals("") || lastName.equals("") || email.equals("") || password.equals(""))
