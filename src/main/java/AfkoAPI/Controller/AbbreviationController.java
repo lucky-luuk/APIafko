@@ -41,7 +41,7 @@ public class AbbreviationController {
 
     @PutMapping("/abbreviation")
     public HTTPResponse changeAbbreviation(@RequestBody Abbreviation[] abbrs){
-        if (abbrs.length ==2){
+        if (abbrs.length == 2){
             return dao.changeAbbreviationById(abbrs);
         }
         return HTTPResponse.returnFailure("input length is not 2");
@@ -64,8 +64,6 @@ public class AbbreviationController {
         else if (!orgId.equals("")) return dao.getAbbreviationByOrgId(orgId, amount);
         else if (!reported.equals("")) return dao.getAbbreviationByReported(Boolean.parseBoolean(reported), amount);
         return HTTPResponse.returnFailure("all fields are empty");
-
-
     }
 
 }

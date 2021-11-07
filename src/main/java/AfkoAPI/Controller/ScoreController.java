@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @RestController
 public class ScoreController {
+
     @Autowired
     ScoreDao dao;
 

@@ -2,15 +2,10 @@ package AfkoAPI.DAO;
 
 import AfkoAPI.HTTPResponse;
 import AfkoAPI.Model.Abbreviation;
-import AfkoAPI.Model.Account;
-import AfkoAPI.Model.Organisation;
 import AfkoAPI.Repository.AbbreviationRepository;
-import AfkoAPI.Repository.AccountRepository;
-import AfkoAPI.Repository.OrganisationRepository;
-import AfkoAPI.RequestObjects.AbbreviationRequestObject;
-import AfkoAPI.services.AbbreviationService;
-import AfkoAPI.services.AccountService;
-import AfkoAPI.services.OrganisationService;
+import AfkoAPI.Repository.BlacklistRepository;
+import AfkoAPI.services.BlacklistService;
+import AfkoAPI.services.TrimListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,16 +14,19 @@ import java.util.*;
 
 @Component
 public class AbbreviationDao {
+
     @Autowired
     AbbreviationRepository abbrRep;
     @Autowired
-    OrganisationRepository orgRep;
-    @Autowired
-    AccountRepository accRep;
+    BlacklistRepository blacklistRepository;
 
     public AbbreviationDao() {
     }
 
+    /** add multiple abbreviations to the database
+     * @param abbreviationRequestObjects the abbreviations to add
+     * @return HTTPResponse
+     */
     public HTTPResponse addAbbreviations(Abbreviation[] abbreviationRequestObjects) {
         Abbreviation[] abbrs = new Abbreviation[abbreviationRequestObjects.length];
 
@@ -44,13 +42,19 @@ public class AbbreviationDao {
         return HTTPResponse.<Abbreviation[]>returnSuccess(abbrs);
     }
 
+    /** add a single abbreviation
+     * @param abbr the abbreviation to add
+     * @return HTTPResponse
+     */
     public HTTPResponse addAbbreviation(Abbreviation abbr) {
-
         Abbreviation a = new Abbreviation(abbr.getName(), abbr.getDescription(), abbr.getOrganisations(), abbr.getCreatedBy());
-        abbrRep.save(a);
-        return HTTPResponse.<Abbreviation>returnSuccess(a);
+        return BlacklistService.filterAbbreviationAndSaveToRepository(blacklistRepository, abbrRep, a);
     }
 
+    /**
+     * @param id the id to filter with
+     * @return an HTTPResponse containing a single abbreviation
+     */
     public HTTPResponse getAbbreviationByID(String id) {
         Optional<Abbreviation> data = abbrRep.findById(id);
 
@@ -60,9 +64,15 @@ public class AbbreviationDao {
         return HTTPResponse.<Abbreviation>returnSuccess(data.get());
     }
 
+    /**
+     * @param name the name to filter with
+     * @param amount the maximum amount of abbreviations to return
+     * @return an HTTPResponse containing a list of abbreviations
+     */
     public HTTPResponse getAbbreviationByName(String name, String amount) {
         List<Abbreviation> data = abbrRep.findByNameStartsWith(name);
-        data = AbbreviationService.trimListByAmount(data, amount);
+        TrimListService<Abbreviation> service = new TrimListService<>();
+        data = service.trimListByAmount(data, amount);
 
         if (data.isEmpty())
             return HTTPResponse.<List<Abbreviation>>returnFailure("could not find name: " + name);
@@ -70,9 +80,15 @@ public class AbbreviationDao {
         return HTTPResponse.<List<Abbreviation>>returnSuccess(data);
     }
 
+    /**
+     * @param orgId organisation id to filter with
+     * @param amount the maximum amount of abbreviations to return
+     * @return an HTTPResponse containing a list of abbreviations
+     */
     public HTTPResponse getAbbreviationByOrgId(String orgId, String amount) {
         List<Abbreviation> data = abbrRep.findByOrganisations_id(orgId);
-        data = AbbreviationService.trimListByAmount(data, amount);
+        TrimListService<Abbreviation> service = new TrimListService<>();
+        data = service.trimListByAmount(data, amount);
 
         if (data.isEmpty())
             return HTTPResponse.<List<Abbreviation>>returnFailure("could not find organisation id: " + orgId);
@@ -80,9 +96,15 @@ public class AbbreviationDao {
         return HTTPResponse.<List<Abbreviation>>returnSuccess(data);
     }
 
+    /**
+     * @param reported the value of reported to filter with
+     * @param amount the maximum amount of abbreviations to return
+     * @return an HTTPResponse containing a list of abbreviations
+     */
     public HTTPResponse getAbbreviationByReported(boolean reported, String amount) {
         List<Abbreviation> data = abbrRep.findByIsUnderReview(reported);
-        data = AbbreviationService.trimListByAmount(data, amount);
+        TrimListService<Abbreviation> service = new TrimListService<>();
+        data = service.trimListByAmount(data, amount);
 
         if (data.isEmpty())
             return HTTPResponse.<List<Abbreviation>>returnFailure("could not find reported abbreviations: " + reported);
@@ -90,6 +112,10 @@ public class AbbreviationDao {
         return HTTPResponse.<List<Abbreviation>>returnSuccess(data);
     }
 
+    /** changes an abbreviation
+     * @param abbrs an array with the Abbreviation to change at position 0, and the Abbreviation to change to at position 1
+     * @return an HTTPResponse containing a the given abbreviations
+     */
     public HTTPResponse changeAbbreviationById(Abbreviation[] abbrs) { //neemt 2 abbreviation vervang de 1e voor de ander
         Abbreviation old = abbrs[0];
         Abbreviation newObject = abbrs[1];
@@ -109,6 +135,10 @@ public class AbbreviationDao {
     }
 
 
+    /** removes abbreviations from the database
+     * @param abbrs the abbreviations to remove
+     * @return an HTTPResponse containing the given abbreviations
+     */
     public HTTPResponse deleteAbbreviations(Abbreviation[] abbrs){
         for (Abbreviation abbr: abbrs){
             abbrRep.deleteById(abbr.getId());

@@ -12,22 +12,23 @@ import org.springframework.web.bind.annotation.*;
 public class OrganisationController {
 
     @Autowired
-    OrganisationRepository orgRep;
-
-    @Autowired
     OrganisationDao dao;
 
     @PostMapping("/organisation")
     public HTTPResponse addOrganisation(@RequestBody OrganisationRequestObject[] o) {
-        return dao.addOrganisations(o);
+        return dao.addOrganisationsGenerateId(o);
     }
 
+    /** adds organisations but does not generate ids for them, can be used to add organisations with known ids that should
+     * not change
+     * @param o the organisations
+     * @return HTTPResponse
+     */
     @PostMapping("/organisation_with_id")
     public HTTPResponse addOrganisationBulk(@RequestBody OrganisationRequestObject[] o) {
         return dao.addOrganisations(o);
     }
 
-    // todo literally the same code as in AbbreviationController
     @GetMapping("/organisation")
     public HTTPResponse getOrganisation(@RequestParam(name="id", defaultValue="") String id,
                                         @RequestParam(name="name", defaultValue="") String name) {

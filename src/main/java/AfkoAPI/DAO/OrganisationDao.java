@@ -26,10 +26,18 @@ public class OrganisationDao {
         return HTTPResponse.<List<Organisation>>returnSuccess(data);
     }
 
+    /** adds organisaitons, does not generate an id for it
+     * @param orgs the organisations to add
+     * @return
+     */
     public HTTPResponse addOrganisations(OrganisationRequestObject[] orgs) {
         return OrganisationService.addOrganisations(orgRep, orgs);
     }
 
+    /** adds organisations, will generate ids for them
+     * @param orgs
+     * @return
+     */
     public HTTPResponse addOrganisationsGenerateId(OrganisationRequestObject[] orgs) {
         return OrganisationService.addOrganisationsGenerateId(orgRep, orgs);
     }
