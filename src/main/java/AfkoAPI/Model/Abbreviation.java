@@ -17,7 +17,7 @@ public class Abbreviation {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany(targetEntity = Organisation.class, cascade = CascadeType.ALL)
+    @ManyToMany(targetEntity = Organisation.class)
     private Set<Organisation> organisations = new HashSet<>();
 
     @ManyToOne(targetEntity = Account.class)
