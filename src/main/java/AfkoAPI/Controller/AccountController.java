@@ -40,7 +40,10 @@ public class AccountController {
         return accountDao.registerAccount(o.getFirstName(), o.getLastName(), o.getEmail(), o.getPassword());
     }
 
-
+    @GetMapping("/account")
+    public HTTPResponse getAccountId(@RequestParam(name="email", defaultValue="") String email) {
+        return accountDao.getIdBelongingToEmail(email);
+    }
 
 
 }

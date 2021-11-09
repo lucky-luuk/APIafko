@@ -17,6 +17,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 
 @Component
 public class AccountDao {
@@ -28,8 +30,6 @@ public class AccountDao {
     @Autowired
     private JwtUserDetailsService userDetailsService;
     @Autowired
-    private AccountDao accountDao;
-    @Autowired
     private AccountRepository accountRepository;
 
 
@@ -38,7 +38,14 @@ public class AccountDao {
     }
 
     public Account findByEmail(String email) {
-        return accountRepository.findByemail(email);
+        return accountRepository.findByemail(email).get();
+    }
+
+    public HTTPResponse<String> getIdBelongingToEmail(String email) {
+        Optional<Account> account = accountRepository.findByemail(email);
+        if (account.isEmpty())
+            return HTTPResponse.<String>returnFailure("could not find account with that email");
+        return HTTPResponse.<String>returnSuccess(account.get().getId());
     }
 
     /** register a new accoutn with the following information

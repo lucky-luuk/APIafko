@@ -2,9 +2,15 @@ package AfkoAPI.DAO;
 
 import AfkoAPI.HTTPResponse;
 import AfkoAPI.Model.Abbreviation;
+import AfkoAPI.Model.Account;
+import AfkoAPI.Model.Organisation;
 import AfkoAPI.Repository.AbbreviationRepository;
+import AfkoAPI.Repository.AccountRepository;
 import AfkoAPI.Repository.BlacklistRepository;
+import AfkoAPI.Repository.OrganisationRepository;
+import AfkoAPI.RequestObjects.AbbreviationRequestObject;
 import AfkoAPI.services.BlacklistService;
+import AfkoAPI.services.OrganisationService;
 import AfkoAPI.services.TrimListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,6 +25,10 @@ public class AbbreviationDao {
     AbbreviationRepository abbrRep;
     @Autowired
     BlacklistRepository blacklistRepository;
+    @Autowired
+    AccountRepository accountRepository;
+    @Autowired
+    OrganisationRepository organisationRepository;
 
     public AbbreviationDao() {
     }
@@ -27,7 +37,7 @@ public class AbbreviationDao {
      * @param abbreviationRequestObjects the abbreviations to add
      * @return HTTPResponse
      */
-    public HTTPResponse addAbbreviations(Abbreviation[] abbreviationRequestObjects) {
+    public HTTPResponse<Abbreviation[]> addAbbreviations(AbbreviationRequestObject[] abbreviationRequestObjects) {
         Abbreviation[] abbrs = new Abbreviation[abbreviationRequestObjects.length];
 
         for (int i = 0; i < abbreviationRequestObjects.length; i++) {
@@ -46,8 +56,12 @@ public class AbbreviationDao {
      * @param abbr the abbreviation to add
      * @return HTTPResponse
      */
-    public HTTPResponse addAbbreviation(Abbreviation abbr) {
-        Abbreviation a = new Abbreviation(abbr.getName(), abbr.getDescription(), abbr.getOrganisations(), abbr.getCreatedBy());
+    public HTTPResponse<Abbreviation> addAbbreviation(AbbreviationRequestObject abbr) {
+        Optional<Account> acc =  accountRepository.findById(abbr.getCreatedBy());
+        if (acc.isEmpty())
+            return HTTPResponse.<Abbreviation>returnFailure("could not find account with id: " + abbr.getCreatedBy());
+
+        Abbreviation a = new Abbreviation(abbr.getName(), abbr.getDescription(), abbr.getOrganisations(), acc.get());
         return BlacklistService.filterAbbreviationAndSaveToRepository(blacklistRepository, abbrRep, a);
     }
 
