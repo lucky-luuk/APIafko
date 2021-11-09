@@ -28,7 +28,7 @@ public class Abbreviation {
 
 
     // The default constructor exists only for the sake of JPA (https://spring.io/guides/gs/accessing-data-jpa/)
-    protected Abbreviation() {}
+    public Abbreviation() {}
     // creates a new id, do not use for already existing data!
     public Abbreviation(String name, String description, ArrayList<Organisation> orgs, Account createdBy) {
         this.name = name;
