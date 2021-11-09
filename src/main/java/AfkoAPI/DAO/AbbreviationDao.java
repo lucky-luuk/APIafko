@@ -69,8 +69,13 @@ public class AbbreviationDao {
      * @param amount the maximum amount of abbreviations to return
      * @return an HTTPResponse containing a list of abbreviations
      */
-    public HTTPResponse getAbbreviationByName(String name, String amount) {
-        List<Abbreviation> data = abbrRep.findByNameStartsWith(name);
+    public HTTPResponse getAbbreviationByNameOrOrgId(String name, String orgId, String amount) {
+        List<Abbreviation> data = null;
+        if (orgId.equals(""))
+            data = abbrRep.findByNameStartsWith(name);
+        else
+             data = abbrRep.findByNameStartsWithAndOrganisations_id(name, orgId);
+
         TrimListService<Abbreviation> service = new TrimListService<>();
         data = service.trimListByAmount(data, amount);
 
