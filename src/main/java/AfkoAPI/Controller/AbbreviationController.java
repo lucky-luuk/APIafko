@@ -4,6 +4,7 @@ import AfkoAPI.DAO.AbbreviationDao;
 import AfkoAPI.HTTPResponse;
 import AfkoAPI.Model.Abbreviation;
 
+import AfkoAPI.RequestObjects.AbbreviationRequestObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,7 @@ public class AbbreviationController {
     }
 
     @PostMapping("/abbreviation")
-    public HTTPResponse addAbbreviation(@RequestBody Abbreviation[] abbrs) {
+    public HTTPResponse addAbbreviation(@RequestBody AbbreviationRequestObject[] abbrs) {
         return dao.addAbbreviations(abbrs);
     }
 

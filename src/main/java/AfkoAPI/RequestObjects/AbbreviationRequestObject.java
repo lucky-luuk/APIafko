@@ -1,5 +1,7 @@
 package AfkoAPI.RequestObjects;
 
+import AfkoAPI.Model.Organisation;
+
 public class AbbreviationRequestObject {
     private String id;
 
@@ -7,15 +9,15 @@ public class AbbreviationRequestObject {
 
     private String description;
 
-    private String[] organisations;
+    private Organisation[] organisations;
 
     private String createdBy;
 
-    public AbbreviationRequestObject(String id, String name, String description, String[] organisationIds, String account_id) {
+    public AbbreviationRequestObject(String id, String name, String description, Organisation[] organisations, String account_id) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.organisations = organisationIds;
+        this.organisations = organisations;
         this.createdBy = account_id;
     }
 
@@ -44,11 +46,11 @@ public class AbbreviationRequestObject {
         this.description = description;
     }
 
-    public String[] getOrganisations() {
+    public Organisation[] getOrganisations() {
         return organisations;
     }
 
-    public void setOrganisations(String[] organisations) {
+    public void setOrganisations(Organisation[] organisations) {
         this.organisations = organisations;
     }
 

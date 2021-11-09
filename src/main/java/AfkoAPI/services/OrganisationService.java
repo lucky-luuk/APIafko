@@ -74,7 +74,7 @@ public class OrganisationService {
      * @param ids the ids to get
      * @return a HTTPResponse object, either failure or success, contains return data
      */
-    public static HTTPResponse getOrganisationsByIds(OrganisationRepository orgRep, String[] ids) {
+    public static HTTPResponse<Organisation[]> getOrganisationsByIds(OrganisationRepository orgRep, String[] ids) {
         Organisation[] organisations = new Organisation[ids.length];
 
         for (int i = 0; i < ids.length; i++) {
