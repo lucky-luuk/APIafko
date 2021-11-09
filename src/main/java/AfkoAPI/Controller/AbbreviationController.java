@@ -31,7 +31,7 @@ public class AbbreviationController {
 
     @GetMapping("/")
     public String index() {
-        return "nothing to see here for now";
+        return "";
     }
 
     @PostMapping("/abbreviation")
@@ -41,7 +41,7 @@ public class AbbreviationController {
 
     @PutMapping("/abbreviation")
     public HTTPResponse changeAbbreviation(@RequestBody Abbreviation[] abbrs){
-        if (abbrs.length == 2){
+        if (abbrs.length == 2) {
             return dao.changeAbbreviationById(abbrs);
         }
         return HTTPResponse.returnFailure("input length is not 2");
