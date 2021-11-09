@@ -1,9 +1,20 @@
 package AfkoAPI.Repository;
 
-import AfkoAPI.Model.Abbreviaion;
+import AfkoAPI.Model.Abbreviation;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AbbreviationRepository extends JpaRepository<Abbreviaion, String> {
+import java.io.Serializable;
+import java.util.List;
 
+public interface AbbreviationRepository extends JpaRepository<Abbreviation, String> {
+    // https://spring.io/guides/gs/accessing-data-jpa/
+    List<Abbreviation> findByName(String name);
+    // organisation_id = organisation.id https://stackoverflow.com/questions/44566760/spring-boot-using-foreign-key-in-crudrepository
+    List<Abbreviation> findByOrganisations_id(String id);
 
+    List<Abbreviation> findByNameStartsWith(String name);
+
+    List<Abbreviation> findByIsUnderReview(boolean isUnderReview);
+
+    List<Abbreviation> findByNameStartsWithAndOrganisations_id(String name, String id);
 }

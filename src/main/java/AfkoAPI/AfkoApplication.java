@@ -9,5 +9,4 @@ public class AfkoApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(AfkoApplication.class, args);
 	}
-
 }
