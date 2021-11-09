@@ -16,5 +16,5 @@ public interface AbbreviationRepository extends JpaRepository<Abbreviation, Stri
 
     List<Abbreviation> findByIsUnderReview(boolean isUnderReview);
 
-
+    List<Abbreviation> findByNameStartsWithAndOrganisations_id(String name, String id);
 }
