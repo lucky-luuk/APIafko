@@ -36,6 +36,7 @@ public class AbbreviationController {
         return dao.deleteAbbreviations(abbrs);
     }
 
+    @CrossOrigin
     @GetMapping("/abbreviation")
     public HTTPResponse getAbbreviation(@RequestParam(name="id", defaultValue="") String id,
                                         @RequestParam(name="under_review", defaultValue = "") String reported,

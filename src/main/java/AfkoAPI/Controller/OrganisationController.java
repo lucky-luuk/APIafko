@@ -14,6 +14,7 @@ public class OrganisationController {
     @Autowired
     OrganisationDao dao;
 
+    @CrossOrigin
     @PostMapping("/organisation")
     public HTTPResponse addOrganisation(@RequestBody OrganisationRequestObject[] o) {
         return dao.addOrganisationsGenerateId(o);
@@ -24,11 +25,13 @@ public class OrganisationController {
      * @param o the organisations
      * @return HTTPResponse
      */
+    @CrossOrigin
     @PostMapping("/organisation_with_id")
     public HTTPResponse addOrganisationBulk(@RequestBody OrganisationRequestObject[] o) {
         return dao.addOrganisations(o);
     }
 
+    @CrossOrigin
     @GetMapping("/organisation")
     public HTTPResponse getOrganisation(@RequestParam(name="id", defaultValue="") String id,
                                         @RequestParam(name="name", defaultValue="") String name) {
