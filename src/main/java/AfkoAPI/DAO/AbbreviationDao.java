@@ -86,9 +86,9 @@ public class AbbreviationDao {
     public HTTPResponse getAbbreviationByNameOrOrgId(String name, String orgId, String amount) {
         List<Abbreviation> data = null;
         if (orgId.equals(""))
-            data = abbrRep.findByNameStartsWith(name);
+            data = abbrRep.findByNameStartsWithIgnoreCase(name);
         else
-             data = abbrRep.findByNameStartsWithAndOrganisations_id(name, orgId);
+             data = abbrRep.findByNameStartsWithIgnoreCaseAndOrganisations_id(name, orgId);
 
         TrimListService<Abbreviation> service = new TrimListService<>();
         data = service.trimListByAmount(data, amount);
