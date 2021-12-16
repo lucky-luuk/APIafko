@@ -158,11 +158,13 @@ public class AbbreviationDao {
      * @param abbrs the abbreviations to remove
      * @return an HTTPResponse containing the given abbreviations
      */
-    public HTTPResponse deleteAbbreviations(Abbreviation[] abbrs){
+    public HTTPResponse<Abbreviation[]> deleteAbbreviations(Abbreviation[] abbrs){
         for (Abbreviation abbr: abbrs){
+            Optional<Abbreviation> a = abbrRep.findById(abbr.getId());
+            if (a.isEmpty()) return HTTPResponse.<Abbreviation[]>returnFailure("could not find abbreviation with id: " + abbr.getId());
             abbrRep.deleteById(abbr.getId());
         }
-        return HTTPResponse.returnSuccess(abbrs);
+        return HTTPResponse.<Abbreviation[]>returnSuccess(abbrs);
     }
 }
 
