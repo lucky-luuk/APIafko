@@ -53,7 +53,7 @@ public class AccountDao {
         Optional<Account> account = accountRepository.findById(id);
         if (account.isEmpty())
             return HTTPResponse.returnFailure("could not find account with id: " + id);
-        return HTTPResponse.returnSuccess(account.get());
+        return HTTPResponse.returnSuccess(new AccountReturnObject(account.get().getId(), account.get().getFirstName(), account.get().getLastName(), account.get().getEmail()));
     }
     /** register a new accoutn with the following information
      * @param firstName the first name

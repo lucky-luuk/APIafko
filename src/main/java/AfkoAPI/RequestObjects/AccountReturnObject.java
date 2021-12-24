@@ -3,16 +3,16 @@ package AfkoAPI.RequestObjects;
 public class AccountReturnObject {
     String id;
     String firstName;
-    String lsatName;
+    String lastName;
     String email;
 
     public AccountReturnObject() {
     }
 
-    public AccountReturnObject(String id, String firstName, String lsatName, String email) {
+    public AccountReturnObject(String id, String firstName, String lastName, String email) {
         this.id = id;
         this.firstName = firstName;
-        this.lsatName = lsatName;
+        this.lastName = lastName;
         this.email = email;
     }
 
@@ -33,12 +33,12 @@ public class AccountReturnObject {
         this.firstName = firstName;
     }
 
-    public String getLsatName() {
-        return lsatName;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLsatName(String lsatName) {
-        this.lsatName = lsatName;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
