@@ -38,15 +38,20 @@ public class AccountDao {
         accountRepository.save(account);
     }
 
-    public Account findByEmail(String email) {
-        return accountRepository.findByemail(email).get();
+    public Account getByEmail(String email) {
+        Optional<Account> acc = accountRepository.findByemail(email);
+        if (acc.isEmpty()) return null;
+        else return acc.get();
     }
-
-    public HTTPResponse<String> getIdBelongingToEmail(String email) {
+    public HTTPResponse<AccountReturnObject> getIdBelongingToEmail(String email) {
         Optional<Account> account = accountRepository.findByemail(email);
         if (account.isEmpty())
-            return HTTPResponse.<String>returnFailure("could not find account with that email");
-        return HTTPResponse.<String>returnSuccess(account.get().getId());
+            return HTTPResponse.<AccountReturnObject>returnFailure("could not find account with that email");
+        AccountReturnObject obj = new AccountReturnObject(account.get().getId(),
+                account.get().getFirstName(),
+                account.get().getLastName(),
+                account.get().getEmail());
+        return HTTPResponse.<AccountReturnObject>returnSuccess(obj);
     }
 
     public HTTPResponse<AccountReturnObject> getAccountDetails(String id) {
@@ -66,7 +71,7 @@ public class AccountDao {
 
         if (firstName.equals("") || lastName.equals("") || email.equals("") || password.equals(""))
             return HTTPResponse.<Account>returnFailure("one ore more required parameters were empty");
-        else if (findByEmail(email) != null)
+        else if (accountRepository.findByemail(email).isPresent())
             return HTTPResponse.<Account>returnFailure("that email already exists: " + email);
 
         Account a = new Account(firstName, lastName, email, password);

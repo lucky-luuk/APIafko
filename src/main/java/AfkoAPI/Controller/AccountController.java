@@ -42,6 +42,7 @@ public class AccountController {
 
     @GetMapping("/account")
     public HTTPResponse getAccountDetails(@RequestParam(name="id", defaultValue="") String id, @RequestParam(name="email", defaultValue = "") String email) {
+        // todo make sure top check if this is the account thats logged in!!!
         if (id.equals(""))
             return accountDao.getIdBelongingToEmail(email);
         return accountDao.getAccountDetails(id);
