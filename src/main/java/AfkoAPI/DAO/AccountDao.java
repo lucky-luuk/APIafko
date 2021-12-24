@@ -4,7 +4,9 @@ import AfkoAPI.Controller.AbbreviationController;
 import AfkoAPI.Controller.AccountController;
 import AfkoAPI.HTTPResponse;
 import AfkoAPI.Model.Account;
+import AfkoAPI.Model.Role;
 import AfkoAPI.Repository.AccountRepository;
+import AfkoAPI.Repository.RoleRepo;
 import AfkoAPI.jwt.JwtRequest;
 import AfkoAPI.jwt.JwtResponse;
 import AfkoAPI.jwt.JwtTokenUtil;
@@ -31,6 +33,7 @@ public class AccountDao {
     private JwtUserDetailsService userDetailsService;
     @Autowired
     private AccountRepository accountRepository;
+    private RoleRepo roleRepo;
 
 
     public void addAccount(Account account) {
@@ -46,6 +49,16 @@ public class AccountDao {
         if (account.isEmpty())
             return HTTPResponse.<String>returnFailure("could not find account with that email");
         return HTTPResponse.<String>returnSuccess(account.get().getId());
+    }
+
+    public Role saveRole(Role role) {
+        return roleRepo.save(role);
+    }
+
+    public void addRoleToUser(String email, String roleName) {
+        Account user = accountRepository.findByemail(email);
+        Role role = roleRepo.findByName(roleName);
+        user.getRoles().add(role);
     }
 
     /** register a new accoutn with the following information
