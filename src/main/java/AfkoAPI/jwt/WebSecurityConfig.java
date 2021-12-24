@@ -15,6 +15,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.RegexRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -34,7 +39,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/dummy_abbreviation",
             "/dummy_score",
             "/organisation_with_id",
-            "/blacklist"
+            "/blacklist",
+            "/ticket/**"
     };
 
     @Autowired
@@ -67,9 +73,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        // We don't need CSRF for this example
-        httpSecurity.csrf().disable()
-                // dont authenticate these requests
+        // configure cors
+        httpSecurity.csrf().disable().cors().configurationSource(this.corsConfigurationSource()).and()
+                // don't authenticate these requests
                 .authorizeRequests().antMatchers(UNSECURED_URLS).permitAll().
                 // all other requests need to be authenticated
                         anyRequest().authenticated().and().
@@ -80,5 +86,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // Add a filter to validate the tokens with every request
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST", "DELETE", "PUT"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
