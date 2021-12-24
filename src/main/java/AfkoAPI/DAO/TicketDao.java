@@ -6,10 +6,13 @@ import AfkoAPI.Model.Ticket;
 import AfkoAPI.Repository.*;
 import AfkoAPI.RequestObjects.TicketRequestObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Component
 public class TicketDao {
     @Autowired
     TicketRepository ticketRep;
@@ -21,12 +24,12 @@ public class TicketDao {
     OrganisationRepository organisationRepository;
 
     public HTTPResponse<Ticket> addTicket (TicketRequestObject requestObject){
-        Ticket ticket = new Ticket();
-        ticket.setId(requestObject.getId());
-        ticket.setMessage(requestObject.getMessage());
-        ticket.setAccountID(requestObject.getAccountID());
-        ticket.setAbbreviation(requestObject.getAbbreviation());
-        ticket.setCreateDate(requestObject.getCreateDate());
+        if (requestObject.getAccountID() == null){
+            return HTTPResponse.returnFailure("accountID is null");
+        }
+
+        requestObject.setCreateDate(LocalDate.now());
+        Ticket ticket = new Ticket(requestObject.getMessage(), requestObject.getCreateDate() , requestObject.getAccountID(),requestObject.getAbbreviation(), requestObject.getStatusName());
         ticketRep.save(ticket);
         return HTTPResponse.returnSuccess(ticket);
     }
@@ -75,11 +78,11 @@ public class TicketDao {
     }
 
     public HTTPResponse getTicketByID(String id) {
-        Optional<Ticket> data = ticketRep.findById(id);
+        List<Ticket> data = ticketRep.findByid(id);
 
         if (data.isEmpty())
             return HTTPResponse.<Ticket>returnFailure("could not find id: " + id);
 
-        return HTTPResponse.<Ticket>returnSuccess(data.get());
+        return HTTPResponse.<List<Ticket>>returnSuccess(data);
     }
 }

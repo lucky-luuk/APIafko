@@ -7,14 +7,12 @@ import AfkoAPI.RequestObjects.TicketRequestObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@RestController
+
 public class TicketController {
     @Autowired
     TicketDao dao;
 
-    @GetMapping("/")
-    public String index() {
-        return "";
-    }
 
     @PostMapping("/ticket")
     public HTTPResponse addTicket(@RequestBody TicketRequestObject[] tickets) {
@@ -22,7 +20,7 @@ public class TicketController {
     }
 
     @PutMapping("/ticket")
-    public HTTPResponse changeTicket(@RequestBody Ticket[] tickets){
+    public HTTPResponse changeTicket(@RequestBody Ticket[] tickets) {
         if (tickets.length == 2) {
             return dao.changeTicket(tickets);
         }
@@ -30,19 +28,14 @@ public class TicketController {
     }
 
     @DeleteMapping("/ticket")
-    public HTTPResponse deleteTicket(@RequestBody Ticket[] ticket){
+    public HTTPResponse deleteTicket(@RequestBody Ticket[] ticket) {
         return dao.deleteTicket(ticket);
     }
 
     @GetMapping("/ticket")
-    public HTTPResponse getTicket(@RequestParam(name="ID", defaultValue="") String id,
-                                        @RequestParam(name="Message", defaultValue = "") String message,
-                                        @RequestParam(name="AccountID", defaultValue="") String accountID,
-                                        @RequestParam(name="AbbreviationID", defaultValue="") String AbbreviationID,
-                                        @RequestParam(name="createdDate", defaultValue="") String createdDate) {
-
-
+    public HTTPResponse getTicket(@RequestParam(name = "id", defaultValue = "") String id) {
         if (!id.equals("")) return dao.getTicketByID(id);
         return HTTPResponse.returnFailure("ticketID field is empty");
     }
+
 }

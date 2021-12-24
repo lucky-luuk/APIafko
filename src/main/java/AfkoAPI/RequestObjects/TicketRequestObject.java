@@ -1,28 +1,25 @@
 package AfkoAPI.RequestObjects;
 
 import AfkoAPI.Model.Abbreviation;
+import AfkoAPI.Model.Account;
 import AfkoAPI.Model.Ticket;
-public class TicketRequestObject {
-    private String id;
-    private String Message;
-    private String accountID;
-    private Abbreviation abbreviation;
-    private String createDate;
 
-    public TicketRequestObject(String id, String message, String accountID, Abbreviation abbreviation, String createDate) {
-        this.id = id;
-        Message = message;
+import java.time.LocalDate;
+import java.util.Date;
+
+public class TicketRequestObject {
+    private String Message;
+    private Account accountID;
+    private Abbreviation abbreviation;
+    private LocalDate createDate;
+    private String StatusName;
+
+    public TicketRequestObject(String message, Account accountID, Abbreviation abbreviation, LocalDate createDate, String StatusName) {
+        this.Message = message;
         this.accountID = accountID;
         this.abbreviation = abbreviation;
         this.createDate = createDate;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+        this.StatusName = StatusName;
     }
 
     public String getMessage() {
@@ -33,11 +30,11 @@ public class TicketRequestObject {
         Message = message;
     }
 
-    public String getAccountID() {
+    public Account getAccountID() {
         return accountID;
     }
 
-    public void setAccountID(String accountID) {
+    public void setAccountID(Account accountID) {
         this.accountID = accountID;
     }
 
@@ -49,11 +46,19 @@ public class TicketRequestObject {
         this.abbreviation = abbreviation;
     }
 
-    public String getCreateDate() {
+    public LocalDate getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(String createDate) {
+    public void setCreateDate(LocalDate createDate) {
         this.createDate = createDate;
+    }
+
+    public String getStatusName() {
+        return StatusName;
+    }
+
+    public void setStatusName(String statusName) {
+        StatusName = statusName;
     }
 }

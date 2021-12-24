@@ -39,7 +39,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/dummy_abbreviation",
             "/dummy_score",
             "/organisation_with_id",
-            "/blacklist"
+            "/blacklist",
+            "/ticket/**"
     };
 
     @Autowired
