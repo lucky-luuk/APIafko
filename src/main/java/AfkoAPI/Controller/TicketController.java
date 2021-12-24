@@ -13,7 +13,6 @@ public class TicketController {
     @Autowired
     TicketDao dao;
 
-
     @PostMapping("/ticket")
     public HTTPResponse addTicket(@RequestBody TicketRequestObject[] tickets) {
         return dao.addTickets(tickets);

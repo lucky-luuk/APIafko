@@ -2,40 +2,38 @@ package AfkoAPI.RequestObjects;
 
 import AfkoAPI.Model.Abbreviation;
 import AfkoAPI.Model.Account;
-import AfkoAPI.Model.Ticket;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class TicketRequestObject {
-    private String Message;
-    private Account accountID;
+    private String message;
+    private Account accountId;
     private Abbreviation abbreviation;
     private LocalDate createDate;
     private String StatusName;
 
     public TicketRequestObject(String message, Account accountID, Abbreviation abbreviation, LocalDate createDate, String StatusName) {
-        this.Message = message;
-        this.accountID = accountID;
+        this.message = message;
+        this.accountId = accountID;
         this.abbreviation = abbreviation;
         this.createDate = createDate;
         this.StatusName = StatusName;
     }
 
     public String getMessage() {
-        return Message;
+        return message;
     }
 
     public void setMessage(String message) {
-        Message = message;
+        this.message = message;
     }
 
     public Account getAccountID() {
-        return accountID;
+        return accountId;
     }
 
     public void setAccountID(Account accountID) {
-        this.accountID = accountID;
+        this.accountId = accountID;
     }
 
     public Abbreviation getAbbreviation() {

@@ -78,11 +78,11 @@ public class TicketDao {
     }
 
     public HTTPResponse getTicketByID(String id) {
-        List<Ticket> data = ticketRep.findByid(id);
+        Optional<Ticket> data = ticketRep.findById(id);
 
         if (data.isEmpty())
             return HTTPResponse.<Ticket>returnFailure("could not find id: " + id);
 
-        return HTTPResponse.<List<Ticket>>returnSuccess(data);
+        return HTTPResponse.<Ticket>returnSuccess(data.get());
     }
 }

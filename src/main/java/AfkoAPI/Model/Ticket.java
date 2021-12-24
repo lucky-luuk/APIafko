@@ -1,12 +1,9 @@
 package AfkoAPI.Model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.hibernate.type.descriptor.java.LocalDateJavaDescriptor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Entity
@@ -25,13 +22,13 @@ public class Ticket {
 
 
     @ManyToOne(targetEntity = Account.class)
-    private Account accountid;
+    private Account accountId;
 
     @ManyToOne(targetEntity = Abbreviation.class)
     private Abbreviation abbreviation;
 
     @Column(name = "statusname")
-    private String StatusName;
+    private String statusName;
 
 
 
@@ -39,13 +36,13 @@ public class Ticket {
     // The default constructor exists only for the sake of JPA (https://spring.io/guides/gs/accessing-data-jpa/)
     public Ticket() {}
     // creates a new id, do not use for already existing data!
-    public Ticket(String message, LocalDate currentDate, Account accountID, Abbreviation abbreviation, String StatusName) {
+    public Ticket(String message, LocalDate currentDate, Account accountId, Abbreviation abbreviation, String StatusName) {
 
         this.message = message;
         this.createDate = currentDate;
-        this.accountid = accountID;
+        this.accountId = accountId;
         this.abbreviation = abbreviation;
-        this.StatusName = StatusName;
+        this.statusName = StatusName;
         this.id = UUID.randomUUID().toString();
 
     }
@@ -75,11 +72,11 @@ public class Ticket {
     }
 
     public Account getAccountID() {
-        return accountid;
+        return accountId;
     }
 
     public void setAccountID(Account accountID) {
-        this.accountid = accountID;
+        this.accountId = accountID;
     }
 
     public Abbreviation getAbbreviation() {
@@ -91,10 +88,10 @@ public class Ticket {
     }
 
     public String getStatusName() {
-        return StatusName;
+        return statusName;
     }
 
     public void setStatusName(String statusName) {
-        StatusName = statusName;
+        this.statusName = statusName;
     }
 }
