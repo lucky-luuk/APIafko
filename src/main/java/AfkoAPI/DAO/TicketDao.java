@@ -2,6 +2,7 @@ package AfkoAPI.DAO;
 
 import AfkoAPI.HTTPResponse;
 import AfkoAPI.Model.Abbreviation;
+import AfkoAPI.Model.TempAbbreviation;
 import AfkoAPI.Model.Ticket;
 import AfkoAPI.Repository.*;
 import AfkoAPI.RequestObjects.TicketRequestObject;
@@ -17,6 +18,10 @@ public class TicketDao {
     @Autowired
     TicketRepository ticketRep;
     @Autowired
+    TempAbbreviationRepository tempAbbrRep;
+    @Autowired
+    AbbreviationRepository abbreviationRepository;
+    @Autowired
     BlacklistRepository blacklistRepository;
     @Autowired
     AccountRepository accountRepository;
@@ -25,15 +30,36 @@ public class TicketDao {
 
     public HTTPResponse<Ticket> addTicket (TicketRequestObject requestObject){
 
-        requestObject.setCreateDate(LocalDate.now());
         Ticket ticket = new Ticket(requestObject);
+        ticket.setCreateDate(LocalDate.now());
+        // if this is not an info request
+        if (ticket.getTemporaryAbbreviation() != null) {
+            // if this is a new abbreviation
+            Optional<Abbreviation> abbr = abbreviationRepository.findById(requestObject.getTemporaryAbbreviation().getId());
+            if (abbr.isEmpty()) {
+                // create a new temp abbr so we also create an id
+                TempAbbreviation a = new TempAbbreviation(requestObject.getTemporaryAbbreviation().getName(),
+                        requestObject.getTemporaryAbbreviation().getDescription(),
+                        requestObject.getTemporaryAbbreviation().getOrganisations(),
+                        requestObject.getTemporaryAbbreviation().getAccountId());
+                tempAbbrRep.save(a);
+                ticket.setTemporaryAbbreviation(a);
+            }
+            else {
+                // else this is about an error in an abbr
+                // check if a tempAbbr already exists, if not create one
+                Optional<TempAbbreviation> a = tempAbbrRep.findById(requestObject.getTemporaryAbbreviation().getId());
+                if (a.isEmpty()) {
+                    tempAbbrRep.save(requestObject.getTemporaryAbbreviation());
+                }
+            }
+        }
         ticketRep.save(ticket);
         return HTTPResponse.returnSuccess(ticket);
     }
 
     public HTTPResponse<Ticket[]> addTickets(TicketRequestObject[] ticketRequestObjects) {
         Ticket[] tickets = new Ticket[ticketRequestObjects.length];
-
 
         for (int i = 0; i < ticketRequestObjects.length; i++) {
             HTTPResponse<Ticket> response = addTicket(ticketRequestObjects[i]);
@@ -59,17 +85,22 @@ public class TicketDao {
         ticket.get().setId(newObject.getId());
         ticket.get().setMessage(newObject.getMessage());
         ticket.get().setAccountId(newObject.getAccountId());
-        ticket.get().setAbbreviation(newObject.getAbbreviation());
+        ticket.get().setTemporaryAbbreviation(newObject.getTemporaryAbbreviation());
         ticket.get().setCreateDate(newObject.getCreateDate());
         ticketRep.save(ticket.get());
         return HTTPResponse.<Ticket[]>returnSuccess(tickets);
     }
 
-    public HTTPResponse<Abbreviation[]> deleteTicket(Ticket[] tickets){
+    public HTTPResponse<Abbreviation[]> deleteTicket(Ticket[] tickets) {
         for (Ticket ticket: tickets){
             Optional<Ticket> a = ticketRep.findById(ticket.getId());
             if (a.isEmpty()) return HTTPResponse.<Abbreviation[]>returnFailure("could not find ticket with id: " + ticket.getId());
             ticketRep.deleteById(ticket.getId());
+            // if there are no more tickets linked to this tempabbr, delete it.
+            if (ticket.getTemporaryAbbreviation() != null) {
+                List<Ticket> abbrTickets = ticketRep.findBytemporaryAbbreviation_id(ticket.getTemporaryAbbreviation().getId());
+                if (abbrTickets.size() == 0) tempAbbrRep.deleteById(ticket.getTemporaryAbbreviation().getId());
+            }
         }
         return HTTPResponse.<Ticket[]>returnSuccess(tickets);
     }
@@ -81,6 +112,11 @@ public class TicketDao {
             return HTTPResponse.<Ticket>returnFailure("could not find id: " + id);
 
         return HTTPResponse.<Ticket>returnSuccess(data.get());
+    }
+
+    public HTTPResponse getTicketsByAbbreviationId(String abbrID) {
+        List<Ticket> tickets = ticketRep.findBytemporaryAbbreviation_id(abbrID);
+        return HTTPResponse.<List<Ticket>>returnSuccess(tickets);
     }
 
     public HTTPResponse getAllTickets() {

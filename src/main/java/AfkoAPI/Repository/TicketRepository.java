@@ -11,9 +11,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
     // organisation_id = organisation.id https://stackoverflow.com/questions/44566760/spring-boot-using-foreign-key-in-crudrepository
     List<Ticket> findByMessage(String message);
 
-    List<Ticket> findByAccountId(String accountid);
-
-    List<Ticket> findByAbbreviation(String abbreviation);
+    List<Ticket> findBytemporaryAbbreviation_id(String id);
 
     List<Ticket> findByCreateDate(String createDate);
 

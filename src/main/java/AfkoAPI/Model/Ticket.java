@@ -21,12 +21,12 @@ public class Ticket {
     @Column(name = "createdate")
     private LocalDate createDate;
 
+    //todo change name
+    @Column(name = "account_id")
+    private String accountId;
 
-    @ManyToOne(targetEntity = Account.class)
-    private Account accountId;
-
-    @ManyToOne(targetEntity = Abbreviation.class)
-    private Abbreviation abbreviation;
+    @ManyToOne(targetEntity = TempAbbreviation.class)
+    private TempAbbreviation temporaryAbbreviation;
 
     @Column(name = "statusname")
     private String statusName;
@@ -39,8 +39,7 @@ public class Ticket {
 
     public Ticket(TicketRequestObject obj) {
         this.id = UUID.randomUUID().toString();
-        this.abbreviation = obj.getAbbreviation();
-        this.createDate = obj.getCreateDate();
+        this.temporaryAbbreviation = obj.getTemporaryAbbreviation();
         this.accountId = obj.getAccountId();
         this.message = obj.getMessage();
         this.statusName = obj.getStatusName();
@@ -70,20 +69,20 @@ public class Ticket {
         this.createDate = createDate;
     }
 
-    public Account getAccountId() {
+    public String getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(Account accountId) {
+    public void setAccountId(String accountId) {
         this.accountId = accountId;
     }
 
-    public Abbreviation getAbbreviation() {
-        return abbreviation;
+    public TempAbbreviation getTemporaryAbbreviation() {
+        return temporaryAbbreviation;
     }
 
-    public void setAbbreviation(Abbreviation abbreviation) {
-        this.abbreviation = abbreviation;
+    public void setTemporaryAbbreviation(TempAbbreviation temporaryAbbreviation) {
+        this.temporaryAbbreviation = temporaryAbbreviation;
     }
 
     public String getStatusName() {
