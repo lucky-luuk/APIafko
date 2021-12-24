@@ -41,8 +41,10 @@ public class AccountController {
     }
 
     @GetMapping("/account")
-    public HTTPResponse getAccountId(@RequestParam(name="email", defaultValue="") String email) {
-        return accountDao.getIdBelongingToEmail(email);
+    public HTTPResponse getAccountDetails(@RequestParam(name="id", defaultValue="") String id, @RequestParam(name="email", defaultValue = "") String email) {
+        if (id.equals(""))
+            return accountDao.getIdBelongingToEmail(email);
+        return accountDao.getAccountDetails(id);
     }
 
 

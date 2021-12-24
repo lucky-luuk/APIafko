@@ -5,6 +5,7 @@ import AfkoAPI.Controller.AccountController;
 import AfkoAPI.HTTPResponse;
 import AfkoAPI.Model.Account;
 import AfkoAPI.Repository.AccountRepository;
+import AfkoAPI.RequestObjects.AccountReturnObject;
 import AfkoAPI.jwt.JwtRequest;
 import AfkoAPI.jwt.JwtResponse;
 import AfkoAPI.jwt.JwtTokenUtil;
@@ -48,6 +49,12 @@ public class AccountDao {
         return HTTPResponse.<String>returnSuccess(account.get().getId());
     }
 
+    public HTTPResponse<AccountReturnObject> getAccountDetails(String id) {
+        Optional<Account> account = accountRepository.findById(id);
+        if (account.isEmpty())
+            return HTTPResponse.returnFailure("could not find account with id: " + id);
+        return HTTPResponse.returnSuccess(account.get());
+    }
     /** register a new accoutn with the following information
      * @param firstName the first name
      * @param lastName the last name
