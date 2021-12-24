@@ -10,14 +10,17 @@ public class TicketRequestObject {
     private Account accountId;
     private Abbreviation abbreviation;
     private LocalDate createDate;
-    private String StatusName;
+    private String statusName;
+    private String type;
 
-    public TicketRequestObject(String message, Account accountID, Abbreviation abbreviation, LocalDate createDate, String StatusName) {
+    public TicketRequestObject() {}
+    public TicketRequestObject(String message, Account accountID, Abbreviation abbreviation, LocalDate createDate, String StatusName, String type) {
         this.message = message;
         this.accountId = accountID;
         this.abbreviation = abbreviation;
         this.createDate = createDate;
-        this.StatusName = StatusName;
+        this.statusName = StatusName;
+        this.type = type;
     }
 
     public String getMessage() {
@@ -26,14 +29,6 @@ public class TicketRequestObject {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public Account getAccountID() {
-        return accountId;
-    }
-
-    public void setAccountID(Account accountID) {
-        this.accountId = accountID;
     }
 
     public Abbreviation getAbbreviation() {
@@ -53,10 +48,26 @@ public class TicketRequestObject {
     }
 
     public String getStatusName() {
-        return StatusName;
+        return statusName;
     }
 
     public void setStatusName(String statusName) {
-        StatusName = statusName;
+        this.statusName = statusName;
+    }
+
+    public Account getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Account accountId) {
+        this.accountId = accountId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

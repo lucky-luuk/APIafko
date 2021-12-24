@@ -24,12 +24,9 @@ public class TicketDao {
     OrganisationRepository organisationRepository;
 
     public HTTPResponse<Ticket> addTicket (TicketRequestObject requestObject){
-        if (requestObject.getAccountID() == null){
-            return HTTPResponse.returnFailure("accountID is null");
-        }
 
         requestObject.setCreateDate(LocalDate.now());
-        Ticket ticket = new Ticket(requestObject.getMessage(), requestObject.getCreateDate() , requestObject.getAccountID(),requestObject.getAbbreviation(), requestObject.getStatusName());
+        Ticket ticket = new Ticket(requestObject);
         ticketRep.save(ticket);
         return HTTPResponse.returnSuccess(ticket);
     }
@@ -50,7 +47,7 @@ public class TicketDao {
         return HTTPResponse.<Ticket[]>returnSuccess(tickets);
     }
 
-    public HTTPResponse changeTicket(Ticket[] tickets) { //neemt 2 abbreviation vervang de 1e voor de ander
+    public HTTPResponse changeTicket(Ticket[] tickets) {
         Ticket old = tickets[0];
         Ticket newObject = tickets[1];
         Optional<Ticket> ticket = ticketRep.findById(old.getId());
@@ -61,7 +58,7 @@ public class TicketDao {
 
         ticket.get().setId(newObject.getId());
         ticket.get().setMessage(newObject.getMessage());
-        ticket.get().setAccountID(newObject.getAccountID());
+        ticket.get().setAccountId(newObject.getAccountId());
         ticket.get().setAbbreviation(newObject.getAbbreviation());
         ticket.get().setCreateDate(newObject.getCreateDate());
         ticketRep.save(ticket.get());
@@ -84,5 +81,9 @@ public class TicketDao {
             return HTTPResponse.<Ticket>returnFailure("could not find id: " + id);
 
         return HTTPResponse.<Ticket>returnSuccess(data.get());
+    }
+
+    public HTTPResponse getAllTickets() {
+        return HTTPResponse.<List<Ticket>>returnSuccess(ticketRep.findAll());
     }
 }

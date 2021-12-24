@@ -1,5 +1,6 @@
 package AfkoAPI.Model;
 
+import AfkoAPI.RequestObjects.TicketRequestObject;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
@@ -30,23 +31,21 @@ public class Ticket {
     @Column(name = "statusname")
     private String statusName;
 
+    @Column(name = "type")
+    private String type;
 
-
-
-    // The default constructor exists only for the sake of JPA (https://spring.io/guides/gs/accessing-data-jpa/)
-    public Ticket() {}
-    // creates a new id, do not use for already existing data!
-    public Ticket(String message, LocalDate currentDate, Account accountId, Abbreviation abbreviation, String StatusName) {
-
-        this.message = message;
-        this.createDate = currentDate;
-        this.accountId = accountId;
-        this.abbreviation = abbreviation;
-        this.statusName = StatusName;
-        this.id = UUID.randomUUID().toString();
-
+    public Ticket() {
     }
 
+    public Ticket(TicketRequestObject obj) {
+        this.id = UUID.randomUUID().toString();
+        this.abbreviation = obj.getAbbreviation();
+        this.createDate = obj.getCreateDate();
+        this.accountId = obj.getAccountId();
+        this.message = obj.getMessage();
+        this.statusName = obj.getStatusName();
+        this.type = obj.getType();
+    }
     public String getId() {
         return id;
     }
@@ -71,12 +70,12 @@ public class Ticket {
         this.createDate = createDate;
     }
 
-    public Account getAccountID() {
+    public Account getAccountId() {
         return accountId;
     }
 
-    public void setAccountID(Account accountID) {
-        this.accountId = accountID;
+    public void setAccountId(Account accountId) {
+        this.accountId = accountId;
     }
 
     public Abbreviation getAbbreviation() {
@@ -93,5 +92,13 @@ public class Ticket {
 
     public void setStatusName(String statusName) {
         this.statusName = statusName;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

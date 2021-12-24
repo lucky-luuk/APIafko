@@ -34,7 +34,7 @@ public class TicketController {
     @GetMapping("/ticket")
     public HTTPResponse getTicket(@RequestParam(name = "id", defaultValue = "") String id) {
         if (!id.equals("")) return dao.getTicketByID(id);
-        return HTTPResponse.returnFailure("ticketID field is empty");
+        return dao.getAllTickets();
     }
 
 }
