@@ -34,6 +34,15 @@ public class Ticket {
     @Column(name = "type")
     private String type;
 
+    @Column()
+    private String userName;
+
+    @Column()
+    private String userEmail;
+
+    @Column()
+    private String userPhone;
+
     public Ticket() {
     }
 
@@ -99,5 +108,29 @@ public class Ticket {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
     }
 }
