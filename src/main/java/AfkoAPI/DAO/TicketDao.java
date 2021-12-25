@@ -77,22 +77,28 @@ public class TicketDao {
         Ticket old = tickets[0];
         Ticket newObject = tickets[1];
         Optional<Ticket> ticket = ticketRep.findById(old.getId());
-
         if (ticket.isEmpty()){
             return HTTPResponse.<Abbreviation[]>returnFailure("could not find ticket with id: " + old.getId());
         }
+        Ticket newTicket = ticket.get();
+        newTicket = copyTicket(newObject);
 
-        ticket.get().setId(newObject.getId());
-        ticket.get().setMessage(newObject.getMessage());
-        ticket.get().setAccountId(newObject.getAccountId());
-        ticket.get().setTemporaryAbbreviation(newObject.getTemporaryAbbreviation());
-        ticket.get().setCreateDate(newObject.getCreateDate());
-        ticket.get().setStatusName(newObject.getStatusName());
-        ticket.get().setUserEmail(newObject.getUserEmail());
-        ticket.get().setUserName(newObject.getUserName());
-        ticket.get().setUserPhone(newObject.getUserPhone());
-        ticketRep.save(ticket.get());
+        ticketRep.save(newTicket);
         return HTTPResponse.<Ticket[]>returnSuccess(tickets);
+    }
+
+    public Ticket copyTicket(Ticket ticket) {
+        Ticket newTicket = new Ticket();
+        newTicket.setId(ticket.getId());
+        newTicket.setMessage(ticket.getMessage());
+        newTicket.setAccountId(ticket.getAccountId());
+        newTicket.setTemporaryAbbreviation(ticket.getTemporaryAbbreviation());
+        newTicket.setCreateDate(ticket.getCreateDate());
+        newTicket.setStatusName(ticket.getStatusName());
+        newTicket.setUserEmail(ticket.getUserEmail());
+        newTicket.setUserName(ticket.getUserName());
+        newTicket.setUserPhone(ticket.getUserPhone());
+        return newTicket;
     }
 
     public HTTPResponse<Abbreviation[]> deleteTicket(Ticket[] tickets) {

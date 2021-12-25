@@ -38,5 +38,4 @@ public class TicketController {
         if (!abbreviationId.equals("")) return dao.getTicketsByAbbreviationId(abbreviationId);
         return dao.getAllTickets();
     }
-
 }
