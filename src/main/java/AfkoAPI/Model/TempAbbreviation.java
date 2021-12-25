@@ -1,26 +1,38 @@
-package AfkoAPI.RequestObjects;
+package AfkoAPI.Model;
 
-import AfkoAPI.Model.Organisation;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
-public class AbbreviationRequestObject {
+@Entity
+public class TempAbbreviation {
+    @Id
+    @Column(name = "id")
     private String id;
 
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "description")
     private String description;
 
-    private Organisation[] organisations;
+    @ManyToMany(targetEntity = Organisation.class)
+    private Set<Organisation> organisations = new HashSet<>();
 
+    @Column
     private String accountId;
 
-    public AbbreviationRequestObject(String id, String name, String description, Organisation[] organisations, String account_id) {
-        this.id = id;
+    public TempAbbreviation( String name, String description, Set<Organisation> organisations, String tempAccountId) {
+        this.id = UUID.randomUUID().toString();
         this.name = name;
         this.description = description;
         this.organisations = organisations;
-        this.accountId = account_id;
+        this.accountId = tempAccountId;
     }
 
+    public TempAbbreviation() {
+    }
 
     public String getId() {
         return id;
@@ -46,11 +58,11 @@ public class AbbreviationRequestObject {
         this.description = description;
     }
 
-    public Organisation[] getOrganisations() {
+    public Set<Organisation> getOrganisations() {
         return organisations;
     }
 
-    public void setOrganisations(Organisation[] organisations) {
+    public void setOrganisations(Set<Organisation> organisations) {
         this.organisations = organisations;
     }
 

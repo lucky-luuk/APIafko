@@ -13,7 +13,6 @@ public class TicketController {
     @Autowired
     TicketDao dao;
 
-
     @PostMapping("/ticket")
     public HTTPResponse addTicket(@RequestBody TicketRequestObject[] tickets) {
         return dao.addTickets(tickets);
@@ -33,9 +32,10 @@ public class TicketController {
     }
 
     @GetMapping("/ticket")
-    public HTTPResponse getTicket(@RequestParam(name = "id", defaultValue = "") String id) {
-        if (!id.equals("")) return dao.getTicketByID(id);
-        return HTTPResponse.returnFailure("ticketID field is empty");
+    public HTTPResponse getTicket(@RequestParam(name = "id", defaultValue = "-1") Integer id,
+                                  @RequestParam(name = "abbreviation_id", defaultValue = "") String abbreviationId) {
+        if (id != -1) return dao.getTicketByID(id);
+        if (!abbreviationId.equals("")) return dao.getTicketsByAbbreviationId(abbreviationId);
+        return dao.getAllTickets();
     }
-
 }

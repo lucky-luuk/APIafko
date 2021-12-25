@@ -1,64 +1,94 @@
 package AfkoAPI.RequestObjects;
 
-import AfkoAPI.Model.Abbreviation;
-import AfkoAPI.Model.Account;
-import AfkoAPI.Model.Ticket;
+import AfkoAPI.Model.TempAbbreviation;
 
-import java.time.LocalDate;
-import java.util.Date;
+import javax.persistence.Column;
 
 public class TicketRequestObject {
-    private String Message;
-    private Account accountID;
-    private Abbreviation abbreviation;
-    private LocalDate createDate;
-    private String StatusName;
+    private String message;
+    private String accountId;
+    private TempAbbreviation temporaryAbbreviation;
+    private String statusName;
+    private String type;
+    private String userName;
+    private String userEmail;
+    private String userPhone;
 
-    public TicketRequestObject(String message, Account accountID, Abbreviation abbreviation, LocalDate createDate, String StatusName) {
-        this.Message = message;
-        this.accountID = accountID;
-        this.abbreviation = abbreviation;
-        this.createDate = createDate;
-        this.StatusName = StatusName;
+    public TicketRequestObject() {}
+
+    public TicketRequestObject(String message, String accountId, TempAbbreviation temporaryAbbreviation, String statusName, String type, String userName, String userEmail, String userPhone) {
+        this.message = message;
+        this.accountId = accountId;
+        this.temporaryAbbreviation = temporaryAbbreviation;
+        this.statusName = statusName;
+        this.type = type;
+        this.userName = userName;
+        this.userEmail = userEmail;
+        this.userPhone = userPhone;
     }
 
+
     public String getMessage() {
-        return Message;
+        return message;
     }
 
     public void setMessage(String message) {
-        Message = message;
+        this.message = message;
     }
 
-    public Account getAccountID() {
-        return accountID;
+    public TempAbbreviation getTemporaryAbbreviation() {
+        return temporaryAbbreviation;
     }
 
-    public void setAccountID(Account accountID) {
-        this.accountID = accountID;
-    }
-
-    public Abbreviation getAbbreviation() {
-        return abbreviation;
-    }
-
-    public void setAbbreviation(Abbreviation abbreviation) {
-        this.abbreviation = abbreviation;
-    }
-
-    public LocalDate getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(LocalDate createDate) {
-        this.createDate = createDate;
+    public void setTemporaryAbbreviation(TempAbbreviation temporaryAbbreviation) {
+        this.temporaryAbbreviation = temporaryAbbreviation;
     }
 
     public String getStatusName() {
-        return StatusName;
+        return statusName;
     }
 
     public void setStatusName(String statusName) {
-        StatusName = statusName;
+        this.statusName = statusName;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
     }
 }

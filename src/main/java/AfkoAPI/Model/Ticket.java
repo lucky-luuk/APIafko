@@ -1,20 +1,23 @@
 package AfkoAPI.Model;
 
+import AfkoAPI.RequestObjects.TicketRequestObject;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.hibernate.type.descriptor.java.LocalDateJavaDescriptor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Entity
-
+@Table
 public class Ticket {
     @Id
-    @Column(name = "id")
-    private String id;
+    @SequenceGenerator(name="webuser_idwebuser_seq",
+            sequenceName="webuser_idwebuser_seq",
+            allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator="webuser_idwebuser_seq")
+    @Column(name = "id", updatable=false)
+    private Integer id;
 
     @Column(name = "message")
     private String message;
@@ -23,38 +26,46 @@ public class Ticket {
     @Column(name = "createdate")
     private LocalDate createDate;
 
+    //todo change name
+    @Column(name = "account_id")
+    private String accountId;
 
-    @ManyToOne(targetEntity = Account.class)
-    private Account accountid;
-
-    @ManyToOne(targetEntity = Abbreviation.class)
-    private Abbreviation abbreviation;
+    @ManyToOne(targetEntity = TempAbbreviation.class)
+    private TempAbbreviation temporaryAbbreviation;
 
     @Column(name = "statusname")
-    private String StatusName;
+    private String statusName;
 
+    @Column(name = "type")
+    private String type;
 
+    @Column()
+    private String userName;
 
+    @Column()
+    private String userEmail;
 
-    // The default constructor exists only for the sake of JPA (https://spring.io/guides/gs/accessing-data-jpa/)
-    public Ticket() {}
-    // creates a new id, do not use for already existing data!
-    public Ticket(String message, LocalDate currentDate, Account accountID, Abbreviation abbreviation, String StatusName) {
+    @Column()
+    private String userPhone;
 
-        this.message = message;
-        this.createDate = currentDate;
-        this.accountid = accountID;
-        this.abbreviation = abbreviation;
-        this.StatusName = StatusName;
-        this.id = UUID.randomUUID().toString();
-
+    public Ticket() {
     }
 
-    public String getId() {
+    public Ticket(TicketRequestObject obj) {
+        this.temporaryAbbreviation = obj.getTemporaryAbbreviation();
+        this.accountId = obj.getAccountId();
+        this.message = obj.getMessage();
+        this.statusName = obj.getStatusName();
+        this.type = obj.getType();
+        this.userEmail = obj.getUserEmail();
+        this.userName = obj.getUserName();
+        this.userPhone = obj.getUserPhone();
+    }
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -74,27 +85,59 @@ public class Ticket {
         this.createDate = createDate;
     }
 
-    public Account getAccountID() {
-        return accountid;
+    public String getAccountId() {
+        return accountId;
     }
 
-    public void setAccountID(Account accountID) {
-        this.accountid = accountID;
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
-    public Abbreviation getAbbreviation() {
-        return abbreviation;
+    public TempAbbreviation getTemporaryAbbreviation() {
+        return temporaryAbbreviation;
     }
 
-    public void setAbbreviation(Abbreviation abbreviation) {
-        this.abbreviation = abbreviation;
+    public void setTemporaryAbbreviation(TempAbbreviation temporaryAbbreviation) {
+        this.temporaryAbbreviation = temporaryAbbreviation;
     }
 
     public String getStatusName() {
-        return StatusName;
+        return statusName;
     }
 
     public void setStatusName(String statusName) {
-        StatusName = statusName;
+        this.statusName = statusName;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
     }
 }

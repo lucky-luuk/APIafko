@@ -3,14 +3,12 @@ package AfkoAPI.DAO;
 import AfkoAPI.HTTPResponse;
 import AfkoAPI.Model.Abbreviation;
 import AfkoAPI.Model.Account;
-import AfkoAPI.Model.Organisation;
 import AfkoAPI.Repository.AbbreviationRepository;
 import AfkoAPI.Repository.AccountRepository;
 import AfkoAPI.Repository.BlacklistRepository;
 import AfkoAPI.Repository.OrganisationRepository;
 import AfkoAPI.RequestObjects.AbbreviationRequestObject;
 import AfkoAPI.services.BlacklistService;
-import AfkoAPI.services.OrganisationService;
 import AfkoAPI.services.TrimListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -57,9 +55,10 @@ public class AbbreviationDao {
      * @return HTTPResponse
      */
     public HTTPResponse<Abbreviation> addAbbreviation(AbbreviationRequestObject abbr) {
-        Optional<Account> acc =  accountRepository.findById(abbr.getCreatedBy());
+
+        Optional<Account> acc = accountRepository.findById(abbr.getAccountId());
         if (acc.isEmpty())
-            return HTTPResponse.<Abbreviation>returnFailure("could not find account with id: " + abbr.getCreatedBy());
+            return HTTPResponse.<Abbreviation>returnFailure("could not find account with id: " + abbr.getAccountId());
 
         Abbreviation a = new Abbreviation(abbr.getName(), abbr.getDescription(), abbr.getOrganisations(), acc.get());
         return BlacklistService.filterAbbreviationAndSaveToRepository(blacklistRepository, abbrRep, a);
