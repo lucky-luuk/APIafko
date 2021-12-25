@@ -8,11 +8,16 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Entity
-
+@Table
 public class Ticket {
     @Id
-    @Column(name = "id")
-    private String id;
+    @SequenceGenerator(name="webuser_idwebuser_seq",
+            sequenceName="webuser_idwebuser_seq",
+            allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator="webuser_idwebuser_seq")
+    @Column(name = "id", updatable=false)
+    private Integer id;
 
     @Column(name = "message")
     private String message;
@@ -47,19 +52,21 @@ public class Ticket {
     }
 
     public Ticket(TicketRequestObject obj) {
-        this.id = UUID.randomUUID().toString();
         this.temporaryAbbreviation = obj.getTemporaryAbbreviation();
         this.accountId = obj.getAccountId();
         this.message = obj.getMessage();
         this.statusName = obj.getStatusName();
         this.type = obj.getType();
+        this.userEmail = obj.getUserEmail();
+        this.userName = obj.getUserName();
+        this.userPhone = obj.getUserPhone();
     }
     public String getId() {
-        return id;
+        return String.valueOf(id);
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.id = Integer.parseInt(id);
     }
 
     public String getMessage() {

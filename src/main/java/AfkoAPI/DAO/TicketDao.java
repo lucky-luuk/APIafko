@@ -87,6 +87,10 @@ public class TicketDao {
         ticket.get().setAccountId(newObject.getAccountId());
         ticket.get().setTemporaryAbbreviation(newObject.getTemporaryAbbreviation());
         ticket.get().setCreateDate(newObject.getCreateDate());
+        ticket.get().setStatusName(newObject.getStatusName());
+        ticket.get().setUserEmail(newObject.getUserEmail());
+        ticket.get().setUserName(newObject.getUserName());
+        ticket.get().setUserPhone(newObject.getUserPhone());
         ticketRep.save(ticket.get());
         return HTTPResponse.<Ticket[]>returnSuccess(tickets);
     }
