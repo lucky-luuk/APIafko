@@ -61,12 +61,12 @@ public class Ticket {
         this.userName = obj.getUserName();
         this.userPhone = obj.getUserPhone();
     }
-    public String getId() {
-        return String.valueOf(id);
+    public Integer getId() {
+        return id;
     }
 
-    public void setId(String id) {
-        this.id = Integer.parseInt(id);
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getMessage() {

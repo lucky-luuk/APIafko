@@ -109,7 +109,7 @@ public class TicketDao {
         return HTTPResponse.<Ticket[]>returnSuccess(tickets);
     }
 
-    public HTTPResponse getTicketByID(String id) {
+    public HTTPResponse getTicketByID(Integer id) {
         Optional<Ticket> data = ticketRep.findById(id);
 
         if (data.isEmpty())
