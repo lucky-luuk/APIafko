@@ -6,15 +6,13 @@ import AfkoAPI.HTTPResponse;
 import AfkoAPI.Model.Account;
 import AfkoAPI.Repository.AccountRepository;
 import AfkoAPI.RequestObjects.AccountReturnObject;
-import AfkoAPI.jwt.JwtRequest;
-import AfkoAPI.jwt.JwtResponse;
-import AfkoAPI.jwt.JwtTokenUtil;
-import AfkoAPI.jwt.JwtUserDetailsService;
+import AfkoAPI.jwt.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -92,7 +90,13 @@ public class AccountDao {
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
-        return HTTPResponse.<JwtResponse>returnSuccess(new JwtResponse(token));
+        final Account user = accountRepository.findByemail(authenticationRequest.getUsername()).get();
+        return returnToken(token, user);
+    }
+
+    public HTTPResponse returnToken(String response, Account account) {
+        UserResponse userDetails = new UserResponse(account.getEmail(), account.getFirstName(), account.getLastName(), response);
+        return HTTPResponse.<UserResponse>returnSuccess(userDetails);
     }
 }
 
