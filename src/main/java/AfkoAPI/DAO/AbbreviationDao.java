@@ -3,14 +3,12 @@ package AfkoAPI.DAO;
 import AfkoAPI.HTTPResponse;
 import AfkoAPI.Model.Abbreviation;
 import AfkoAPI.Model.Account;
-import AfkoAPI.Model.Organisation;
 import AfkoAPI.Repository.AbbreviationRepository;
 import AfkoAPI.Repository.AccountRepository;
 import AfkoAPI.Repository.BlacklistRepository;
 import AfkoAPI.Repository.OrganisationRepository;
 import AfkoAPI.RequestObjects.AbbreviationRequestObject;
 import AfkoAPI.services.BlacklistService;
-import AfkoAPI.services.OrganisationService;
 import AfkoAPI.services.TrimListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -57,9 +55,10 @@ public class AbbreviationDao {
      * @return HTTPResponse
      */
     public HTTPResponse<Abbreviation> addAbbreviation(AbbreviationRequestObject abbr) {
-        Optional<Account> acc =  accountRepository.findById(abbr.getCreatedBy());
+
+        Optional<Account> acc = accountRepository.findById(abbr.getAccountId());
         if (acc.isEmpty())
-            return HTTPResponse.<Abbreviation>returnFailure("could not find account with id: " + abbr.getCreatedBy());
+            return HTTPResponse.<Abbreviation>returnFailure("could not find account with id: " + abbr.getAccountId());
 
         Abbreviation a = new Abbreviation(abbr.getName(), abbr.getDescription(), abbr.getOrganisations(), acc.get());
         return BlacklistService.filterAbbreviationAndSaveToRepository(blacklistRepository, abbrRep, a);
@@ -86,9 +85,9 @@ public class AbbreviationDao {
     public HTTPResponse getAbbreviationByNameOrOrgId(String name, String orgId, String amount) {
         List<Abbreviation> data = null;
         if (orgId.equals(""))
-            data = abbrRep.findByNameStartsWith(name);
+            data = abbrRep.findByNameStartsWithIgnoreCase(name);
         else
-             data = abbrRep.findByNameStartsWithAndOrganisations_id(name, orgId);
+             data = abbrRep.findByNameStartsWithIgnoreCaseAndOrganisations_id(name, orgId);
 
         TrimListService<Abbreviation> service = new TrimListService<>();
         data = service.trimListByAmount(data, amount);
@@ -158,11 +157,13 @@ public class AbbreviationDao {
      * @param abbrs the abbreviations to remove
      * @return an HTTPResponse containing the given abbreviations
      */
-    public HTTPResponse deleteAbbreviations(Abbreviation[] abbrs){
+    public HTTPResponse<Abbreviation[]> deleteAbbreviations(Abbreviation[] abbrs){
         for (Abbreviation abbr: abbrs){
+            Optional<Abbreviation> a = abbrRep.findById(abbr.getId());
+            if (a.isEmpty()) return HTTPResponse.<Abbreviation[]>returnFailure("could not find abbreviation with id: " + abbr.getId());
             abbrRep.deleteById(abbr.getId());
         }
-        return HTTPResponse.returnSuccess(abbrs);
+        return HTTPResponse.<Abbreviation[]>returnSuccess(abbrs);
     }
 }
 

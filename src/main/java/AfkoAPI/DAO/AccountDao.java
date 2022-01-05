@@ -7,6 +7,7 @@ import AfkoAPI.Model.Account;
 import AfkoAPI.Model.Role;
 import AfkoAPI.Repository.AccountRepository;
 import AfkoAPI.Repository.RoleRepo;
+import AfkoAPI.RequestObjects.AccountReturnObject;
 import AfkoAPI.jwt.JwtRequest;
 import AfkoAPI.jwt.JwtResponse;
 import AfkoAPI.jwt.JwtTokenUtil;
@@ -41,16 +42,22 @@ public class AccountDao {
         accountRepository.save(account);
     }
 
-    public Account findByEmail(String email) {
-        return accountRepository.findByemail(email).get();
+    public Account getByEmail(String email) {
+        Optional<Account> acc = accountRepository.findByemail(email);
+        if (acc.isEmpty()) return null;
+        else return acc.get();
     }
-
-    public HTTPResponse<String> getIdBelongingToEmail(String email) {
+    public HTTPResponse<AccountReturnObject> getIdBelongingToEmail(String email) {
         Optional<Account> account = accountRepository.findByemail(email);
         if (account.isEmpty())
-            return HTTPResponse.<String>returnFailure("could not find account with that email");
-        return HTTPResponse.<String>returnSuccess(account.get().getId());
+            return HTTPResponse.<AccountReturnObject>returnFailure("could not find account with that email");
+        AccountReturnObject obj = new AccountReturnObject(account.get().getId(),
+                account.get().getFirstName(),
+                account.get().getLastName(),
+                account.get().getEmail());
+        return HTTPResponse.<AccountReturnObject>returnSuccess(obj);
     }
+
 
     public HTTPResponse<String> saveRole(Role role) {
         roleRepo.save(role);
@@ -64,6 +71,14 @@ public class AccountDao {
         return HTTPResponse.<String>returnSuccess("Role is safed to user");
     }
 
+
+    public HTTPResponse<AccountReturnObject> getAccountDetails(String id) {
+        Optional<Account> account = accountRepository.findById(id);
+        if (account.isEmpty())
+            return HTTPResponse.returnFailure("could not find account with id: " + id);
+        return HTTPResponse.returnSuccess(new AccountReturnObject(account.get().getId(), account.get().getFirstName(), account.get().getLastName(), account.get().getEmail()));
+    }
+
     /** register a new accoutn with the following information
      * @param firstName the first name
      * @param lastName the last name
@@ -75,7 +90,7 @@ public class AccountDao {
 
         if (firstName.equals("") || lastName.equals("") || email.equals("") || password.equals(""))
             return HTTPResponse.<Account>returnFailure("one ore more required parameters were empty");
-        else if (findByEmail(email) != null)
+        else if (accountRepository.findByemail(email).isPresent())
             return HTTPResponse.<Account>returnFailure("that email already exists: " + email);
 
         Account a = new Account(firstName, lastName, email, password);
@@ -104,4 +119,3 @@ public class AccountDao {
         return HTTPResponse.<JwtResponse>returnSuccess(new JwtResponse(token));
     }
 }
-
