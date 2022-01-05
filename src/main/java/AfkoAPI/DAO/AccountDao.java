@@ -33,6 +33,7 @@ public class AccountDao {
     private JwtUserDetailsService userDetailsService;
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
     private RoleRepo roleRepo;
 
 
@@ -51,14 +52,16 @@ public class AccountDao {
         return HTTPResponse.<String>returnSuccess(account.get().getId());
     }
 
-    public Role saveRole(Role role) {
-        return roleRepo.save(role);
+    public HTTPResponse<String> saveRole(Role role) {
+        roleRepo.save(role);
+        return HTTPResponse.<String>returnSuccess("Save role");
     }
 
-    public void addRoleToUser(String email, String roleName) {
-        Account user = accountRepository.findByemail(email);
+    public HTTPResponse<String> addRoleToUser(String email, String roleName) {
+        Account user = accountRepository.findByemail(email).get();
         Role role = roleRepo.findByName(roleName);
         user.getRoles().add(role);
+        return HTTPResponse.<String>returnSuccess("Role is safed to user");
     }
 
     /** register a new accoutn with the following information
