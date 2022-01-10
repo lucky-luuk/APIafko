@@ -100,6 +100,28 @@ public class AccountDao {
         return HTTPResponse.returnSuccess(new AccountReturnObject(account.get().getId(), account.get().getFirstName(), account.get().getLastName(), account.get().getEmail()));
     }
 
+    public HTTPResponse changeAccount(Account[] accounts) {
+        Account old = accounts[0];
+        Account newObject = accounts[1];
+        Optional<Account> account = accountRepository.findById(old.getId());
+        if (account.isEmpty()) {
+            return HTTPResponse.returnFailure("could not find account with id: " + old.getId());
+        }
+        Account newAccount = account.get();
+        newAccount = copyAccount(newObject);
+
+        accountRepository.save(newAccount);
+        return HTTPResponse.returnSuccess(accounts);
+    }
+
+    public Account copyAccount(Account account) {
+        Account newAccount = new Account();
+        newAccount.setFirstName(account.getFirstName());
+        newAccount.setLastName(account.getLastName());
+        newAccount.setEmail(account.getEmail());
+        return newAccount;
+    }
+
     /** register a new accoutn with the following information
      * @param firstName the first name
      * @param lastName the last name
