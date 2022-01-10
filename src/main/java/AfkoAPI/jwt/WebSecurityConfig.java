@@ -42,7 +42,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/ticket/**",
             "/account",
             "/role/save",
-            "/role/addtouser"
+            "/role/addtouser",
+            "/role/removefromuser"
     };
 
     @Autowired

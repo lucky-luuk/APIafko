@@ -35,7 +35,6 @@ public class AccountDao {
     @Autowired
     private RoleRepo roleRepo;
 
-
     public void addAccount(Account account) {
         accountRepository.save(account);
     }
@@ -75,6 +74,24 @@ public class AccountDao {
         accountRepository.save(user.get());
 
         return HTTPResponse.<String>returnSuccess("Role is safed to user");
+    }
+
+    public HTTPResponse<String> removeRoleFromUser(String email, String roleName) {
+        Optional<Account> user = accountRepository.findByemail(email);
+        if (user.isEmpty())
+            return HTTPResponse.returnFailure("user does not exist");
+
+        Role role = roleRepo.findByName(roleName);
+        if (role == null)
+            return HTTPResponse.returnFailure("role does not exist");
+
+        boolean result = user.get().getRoles().remove(role);
+        if (result == false)
+            return HTTPResponse.returnFailure("user does not have role");
+
+        accountRepository.save(user.get());
+
+        return HTTPResponse.<String>returnSuccess("Role is removed from user");
     }
 
 

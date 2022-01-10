@@ -2,26 +2,12 @@ package AfkoAPI.Controller;
 
 import AfkoAPI.DAO.AccountDao;
 import AfkoAPI.HTTPResponse;
-import AfkoAPI.Model.Account;
 import AfkoAPI.Model.Role;
 import AfkoAPI.RequestObjects.AccountRequestObject;
 import AfkoAPI.RequestObjects.RoleUserRequestObject;
 import AfkoAPI.jwt.JwtRequest;
-import AfkoAPI.jwt.JwtTokenUtil;
-import AfkoAPI.jwt.JwtResponse;
-import AfkoAPI.jwt.JwtUserDetailsService;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
 
 @RestController
 public class AccountController {
@@ -53,8 +39,13 @@ public class AccountController {
     }
 
     @PostMapping("/role/addtouser")
-    public HTTPResponse addRoleRoUser(@RequestBody RoleUserRequestObject form) {
+    public HTTPResponse<String> addRoleRoUser(@RequestBody RoleUserRequestObject form) {
         return accountDao.addRoleToUser(form.getEmail(), form.getRoleName());
+    }
+
+    @PostMapping("/role/removefromuser")
+    public HTTPResponse<String> removeRoleFromUser(@RequestBody RoleUserRequestObject form) {
+        return accountDao.removeRoleFromUser(form.getEmail(), form.getRoleName());
     }
 
     @GetMapping("/account")
