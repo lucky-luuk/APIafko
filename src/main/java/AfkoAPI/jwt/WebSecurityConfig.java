@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -29,7 +28,7 @@ import java.util.Arrays;
 
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    // define urls that dont need jwt token
+    // define urls that don't need jwt token
     public static final String[] UNSECURED_URLS = {
             "/authenticate",
             "/abbreviation",
@@ -41,7 +40,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/organisation_with_id",
             "/blacklist",
             "/ticket/**",
-            "/account"
+            "/account",
+            "/role/save",
+            "/role/addtouser",
+            "/role/removefromuser"
     };
 
     @Autowired

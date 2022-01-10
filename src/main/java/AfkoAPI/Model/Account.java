@@ -1,9 +1,7 @@
 package AfkoAPI.Model;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 public class Account {
@@ -23,7 +21,11 @@ public class Account {
     @Column(name = "password")
     private String password;
 
-    private Account() {}
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = Role.class)
+    private Set<Role> roles = new HashSet<>();
+
+    public Account() {}
+
     public Account(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -32,6 +34,13 @@ public class Account {
         this.id = UUID.randomUUID().toString();
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 
     public String getId() {
         return id;
