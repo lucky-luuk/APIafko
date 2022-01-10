@@ -8,11 +8,16 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Entity
-
+@Table
 public class Ticket {
     @Id
-    @Column(name = "id")
-    private String id;
+    @SequenceGenerator(name="webuser_idwebuser_seq",
+            sequenceName="webuser_idwebuser_seq",
+            allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator="webuser_idwebuser_seq")
+    @Column(name = "id", updatable=false)
+    private Integer id;
 
     @Column(name = "message")
     private String message;
@@ -34,22 +39,33 @@ public class Ticket {
     @Column(name = "type")
     private String type;
 
+    @Column()
+    private String userName;
+
+    @Column()
+    private String userEmail;
+
+    @Column()
+    private String userPhone;
+
     public Ticket() {
     }
 
     public Ticket(TicketRequestObject obj) {
-        this.id = UUID.randomUUID().toString();
         this.temporaryAbbreviation = obj.getTemporaryAbbreviation();
         this.accountId = obj.getAccountId();
         this.message = obj.getMessage();
         this.statusName = obj.getStatusName();
         this.type = obj.getType();
+        this.userEmail = obj.getUserEmail();
+        this.userName = obj.getUserName();
+        this.userPhone = obj.getUserPhone();
     }
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -99,5 +115,29 @@ public class Ticket {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
     }
 }

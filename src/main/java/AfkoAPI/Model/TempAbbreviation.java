@@ -20,7 +20,7 @@ public class TempAbbreviation {
     @ManyToMany(targetEntity = Organisation.class)
     private Set<Organisation> organisations = new HashSet<>();
 
-    @ManyToOne(targetEntity = Account.class)
+    @Column
     private String accountId;
 
     public TempAbbreviation( String name, String description, Set<Organisation> organisations, String tempAccountId) {

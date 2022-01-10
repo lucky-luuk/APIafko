@@ -2,18 +2,11 @@ package AfkoAPI.Controller;
 
 import AfkoAPI.DAO.AccountDao;
 import AfkoAPI.HTTPResponse;
-import AfkoAPI.Model.Account;
+import AfkoAPI.Model.Role;
 import AfkoAPI.RequestObjects.AccountRequestObject;
+import AfkoAPI.RequestObjects.RoleUserRequestObject;
 import AfkoAPI.jwt.JwtRequest;
-import AfkoAPI.jwt.JwtTokenUtil;
-import AfkoAPI.jwt.JwtResponse;
-import AfkoAPI.jwt.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -40,13 +33,29 @@ public class AccountController {
         return accountDao.registerAccount(o.getFirstName(), o.getLastName(), o.getEmail(), o.getPassword());
     }
 
+    @PostMapping("/role/save")
+    public HTTPResponse<Role> saveRole(@RequestBody Role role) {
+        return accountDao.saveRole(role);
+    }
+
+    @PostMapping("/role/addtouser")
+    public HTTPResponse<String> addRoleRoUser(@RequestBody RoleUserRequestObject form) {
+        return accountDao.addRoleToUser(form.getEmail(), form.getRoleName());
+    }
+
+    @PostMapping("/role/removefromuser")
+    public HTTPResponse<String> removeRoleFromUser(@RequestBody RoleUserRequestObject form) {
+        return accountDao.removeRoleFromUser(form.getEmail(), form.getRoleName());
+    }
+
     @GetMapping("/account")
     public HTTPResponse getAccountDetails(@RequestParam(name="id", defaultValue="") String id, @RequestParam(name="email", defaultValue = "") String email) {
+        // todo make sure top check if this is the account thats logged in!!!
         if (id.equals(""))
             return accountDao.getIdBelongingToEmail(email);
         return accountDao.getAccountDetails(id);
     }
-
-
 }
+
+
 

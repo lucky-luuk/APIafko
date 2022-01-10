@@ -32,11 +32,10 @@ public class TicketController {
     }
 
     @GetMapping("/ticket")
-    public HTTPResponse getTicket(@RequestParam(name = "id", defaultValue = "") String id,
+    public HTTPResponse getTicket(@RequestParam(name = "id", defaultValue = "-1") Integer id,
                                   @RequestParam(name = "abbreviation_id", defaultValue = "") String abbreviationId) {
-        if (!id.equals("")) return dao.getTicketByID(id);
+        if (id != -1) return dao.getTicketByID(id);
         if (!abbreviationId.equals("")) return dao.getTicketsByAbbreviationId(abbreviationId);
         return dao.getAllTickets();
     }
-
 }

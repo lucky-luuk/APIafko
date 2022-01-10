@@ -11,14 +11,14 @@ public class AbbreviationRequestObject {
 
     private Organisation[] organisations;
 
-    private String createdBy;
+    private String accountId;
 
     public AbbreviationRequestObject(String id, String name, String description, Organisation[] organisations, String account_id) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.organisations = organisations;
-        this.createdBy = account_id;
+        this.accountId = account_id;
     }
 
 
@@ -54,11 +54,11 @@ public class AbbreviationRequestObject {
         this.organisations = organisations;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    public String getAccountId() {
+        return accountId;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 }
