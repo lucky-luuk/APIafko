@@ -15,16 +15,14 @@ public class Account {
     @Column(name = "last_name")
     private String lastName;
 
-
-
     @Column(name = "email")
     private String email;
 
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<Role> roles = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = Role.class)
+    private Set<Role> roles = new HashSet<>();
 
     public Account() {}
 
@@ -36,11 +34,11 @@ public class Account {
         this.id = UUID.randomUUID().toString();
     }
 
-    public Collection<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Collection<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 

@@ -5,6 +5,7 @@ import AfkoAPI.HTTPResponse;
 import AfkoAPI.Model.Account;
 import AfkoAPI.Model.Role;
 import AfkoAPI.RequestObjects.AccountRequestObject;
+import AfkoAPI.RequestObjects.RoleUserRequestObject;
 import AfkoAPI.jwt.JwtRequest;
 import AfkoAPI.jwt.JwtTokenUtil;
 import AfkoAPI.jwt.JwtResponse;
@@ -47,13 +48,13 @@ public class AccountController {
     }
 
     @PostMapping("/role/save")
-    public HTTPResponse saveRole(@RequestBody Role role) {
+    public HTTPResponse<Role> saveRole(@RequestBody Role role) {
         return accountDao.saveRole(role);
     }
 
     @PostMapping("/role/addtouser")
-    public HTTPResponse addRoleRoUser(@RequestBody RoleToUserForm form) {
-        return accountDao.addRoleToUser(form.getUsername(), form.getRoleName());
+    public HTTPResponse addRoleRoUser(@RequestBody RoleUserRequestObject form) {
+        return accountDao.addRoleToUser(form.getEmail(), form.getRoleName());
     }
 
     @GetMapping("/account")
@@ -63,15 +64,7 @@ public class AccountController {
             return accountDao.getIdBelongingToEmail(email);
         return accountDao.getAccountDetails(id);
     }
-
-
 }
 
-
-@Data
-class RoleToUserForm {
-    private String username;
-    private String roleName;
-}
 
 

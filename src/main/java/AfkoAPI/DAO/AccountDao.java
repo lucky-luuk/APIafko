@@ -1,7 +1,5 @@
 package AfkoAPI.DAO;
 
-import AfkoAPI.Controller.AbbreviationController;
-import AfkoAPI.Controller.AccountController;
 import AfkoAPI.HTTPResponse;
 import AfkoAPI.Model.Account;
 import AfkoAPI.Model.Role;
@@ -59,15 +57,23 @@ public class AccountDao {
     }
 
 
-    public HTTPResponse<String> saveRole(Role role) {
+    public HTTPResponse<Role> saveRole(Role role) {
         roleRepo.save(role);
-        return HTTPResponse.<String>returnSuccess("Save role");
+        return HTTPResponse.<Role>returnSuccess(role);
     }
 
     public HTTPResponse<String> addRoleToUser(String email, String roleName) {
-        Account user = accountRepository.findByemail(email).get();
+        Optional<Account> user = accountRepository.findByemail(email);
+        if (user.isEmpty())
+            return HTTPResponse.returnFailure("user does not exist");
+
         Role role = roleRepo.findByName(roleName);
-        user.getRoles().add(role);
+        if (role == null)
+            return HTTPResponse.returnFailure("role does not exist");
+
+        user.get().getRoles().add(role);
+        accountRepository.save(user.get());
+
         return HTTPResponse.<String>returnSuccess("Role is safed to user");
     }
 

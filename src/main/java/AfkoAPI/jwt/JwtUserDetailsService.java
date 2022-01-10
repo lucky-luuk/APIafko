@@ -15,9 +15,9 @@ import java.util.ArrayList;
 public class JwtUserDetailsService implements UserDetailsService {
     @Autowired
     private AccountDao accountDao;
+
     @Autowired
     private PasswordEncoder bcryptEncoder;
-
 
     /** username means email in this context
      * @param email the users email

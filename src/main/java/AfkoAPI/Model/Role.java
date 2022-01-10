@@ -4,23 +4,29 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.UUID;
 
-
-@Data
 @Entity
-@NoArgsConstructor
 public class Role {
     @Id
-    private String id;
+    @Column
     private String name;
 
-    public Role(String id, String name) {
-        this.id = id;
+    public Role(String name) {
         this.name = name;
-        this.id = UUID.randomUUID().toString();
+    }
+
+    public Role() {}
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
