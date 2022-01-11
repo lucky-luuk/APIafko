@@ -101,15 +101,15 @@ public class TicketDao {
         return newTicket;
     }
 
-    public HTTPResponse<Abbreviation[]> deleteTicket(Ticket[] tickets) {
+    public HTTPResponse<Ticket[]> deleteTicket(Ticket[] tickets) {
         for (Ticket ticket: tickets){
             Optional<Ticket> a = ticketRep.findById(ticket.getId());
             if (a.isEmpty()) return HTTPResponse.<Abbreviation[]>returnFailure("could not find ticket with id: " + ticket.getId());
             ticketRep.deleteById(ticket.getId());
             // if there are no more tickets linked to this tempabbr, delete it.
             if (ticket.getTemporaryAbbreviation() != null) {
-                List<Ticket> abbrTickets = ticketRep.findBytemporaryAbbreviation_id(ticket.getTemporaryAbbreviation().getId());
-                if (abbrTickets.size() == 0) tempAbbrRep.deleteById(ticket.getTemporaryAbbreviation().getId());
+                Optional<TempAbbreviation> abbr = tempAbbrRep.findById(ticket.getTemporaryAbbreviation().getId());
+                abbr.ifPresent(tempAbbreviation -> tempAbbrRep.delete(tempAbbreviation));
             }
         }
         return HTTPResponse.<Ticket[]>returnSuccess(tickets);
