@@ -13,10 +13,11 @@ public class TicketRequestObject {
     private String userName;
     private String userEmail;
     private String userPhone;
+    private boolean removed;
 
     public TicketRequestObject() {}
 
-    public TicketRequestObject(String message, String accountId, TempAbbreviation temporaryAbbreviation, String statusName, String type, String userName, String userEmail, String userPhone) {
+    public TicketRequestObject(String message, String accountId, TempAbbreviation temporaryAbbreviation, String statusName, String type, String userName, String userEmail, String userPhone,  boolean removed) {
         this.message = message;
         this.accountId = accountId;
         this.temporaryAbbreviation = temporaryAbbreviation;
@@ -25,8 +26,16 @@ public class TicketRequestObject {
         this.userName = userName;
         this.userEmail = userEmail;
         this.userPhone = userPhone;
+        this.removed = removed;
     }
 
+    public boolean isRemoved() {
+        return removed;
+    }
+
+    public void setRemoved(boolean removed) {
+        this.removed = removed;
+    }
 
     public String getMessage() {
         return message;
