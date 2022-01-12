@@ -40,10 +40,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/organisation_with_id",
             "/blacklist",
             "/ticket/**",
-            "/account",
             "/role/save",
             "/role/addtouser",
-            "/role/removefromuser"
+            "/role/removefromuser",
+            "/account",
+            "/account/mod"
     };
 
     @Autowired

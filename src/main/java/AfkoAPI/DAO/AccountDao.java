@@ -5,6 +5,7 @@ import AfkoAPI.Model.Account;
 import AfkoAPI.Model.Role;
 import AfkoAPI.Repository.AccountRepository;
 import AfkoAPI.Repository.RoleRepo;
+import AfkoAPI.RequestObjects.AccountRequestObject;
 import AfkoAPI.RequestObjects.AccountReturnObject;
 import AfkoAPI.jwt.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -100,6 +102,35 @@ public class AccountDao {
         return HTTPResponse.returnSuccess(new AccountReturnObject(account.get().getId(), account.get().getFirstName(), account.get().getLastName(), account.get().getEmail()));
     }
 
+    public HTTPResponse changeAccount(Account[] accounts) {
+        Account old = accounts[0];
+        Account newObject = accounts[1];
+        Optional<Account> account = accountRepository.findById(old.getId());
+        if (account.isEmpty()) {
+            return HTTPResponse.returnFailure("could not find account with id: " + old.getId());
+        }
+        newObject.setId(old.getId());
+
+        accountRepository.save(newObject);
+        return HTTPResponse.returnSuccess(accounts);
+    }
+
+    public HTTPResponse getAllMods(){
+        List<Account> accs = accountRepository.findByRoles_name(RoleNames.MOD.getValue());
+        return HTTPResponse.returnSuccess(accs);
+    }
+
+    public HTTPResponse createMod(AccountRequestObject acc){
+        HTTPResponse<Account> r = registerAccount(acc.getFirstName(), acc.getLastName(), acc.getEmail(), acc.getPassword());
+        if (!r.isSuccess())
+            return r;
+        String email = r.getData().getEmail();
+        addRoleToUser(email, RoleNames.MOD.getValue());
+        return HTTPResponse.returnSuccess(acc);
+    }
+
+
+
     /** register a new accoutn with the following information
      * @param firstName the first name
      * @param lastName the last name
@@ -115,7 +146,7 @@ public class AccountDao {
             return HTTPResponse.<Account>returnFailure("that email already exists: " + email);
 
         Account a = new Account(firstName, lastName, email, password);
-        userDetailsService.saveAccount(a);
+        accountRepository.save(a);
         return HTTPResponse.<Account>returnSuccess(a);
     }
 
