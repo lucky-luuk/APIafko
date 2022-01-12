@@ -57,12 +57,22 @@ public class AccountController {
         return accountDao.getAccountDetails(id);
     }
 
-    @PutMapping("/account")
+    @PutMapping("/account/mod")
     public HTTPResponse changeAccount(@RequestBody Account[] accounts) {
         if (accounts.length == 2) {
             return accountDao.changeAccount(accounts);
         }
         return HTTPResponse.returnFailure("input length is not 2");
+    }
+
+    @GetMapping("/account/mod")
+    public HTTPResponse getAllMods(){
+        return accountDao.getAllMods();
+    }
+
+    @PostMapping("/account/mod")
+    public HTTPResponse createMod(@RequestBody AccountRequestObject acc){
+        return accountDao.createMod(acc);
     }
 }
 
