@@ -76,29 +76,14 @@ public class TicketDao {
     public HTTPResponse changeTicket(Ticket[] tickets) {
         Ticket old = tickets[0];
         Ticket newObject = tickets[1];
-        Optional<Ticket> ticket = ticketRep.findById(old.getId());
-        if (ticket.isEmpty()){
+        Optional<Ticket> t = ticketRep.findById(old.getId());
+        if (t.isEmpty()){
             return HTTPResponse.<Abbreviation[]>returnFailure("could not find ticket with id: " + old.getId());
         }
-        Ticket newTicket = ticket.get();
-        newTicket = copyTicket(newObject);
+        newObject.setId(old.getId());
 
-        ticketRep.save(newTicket);
+        ticketRep.save(newObject);
         return HTTPResponse.<Ticket[]>returnSuccess(tickets);
-    }
-
-    public Ticket copyTicket(Ticket ticket) {
-        Ticket newTicket = new Ticket();
-        newTicket.setId(ticket.getId());
-        newTicket.setMessage(ticket.getMessage());
-        newTicket.setAccountId(ticket.getAccountId());
-        newTicket.setTemporaryAbbreviation(ticket.getTemporaryAbbreviation());
-        newTicket.setCreateDate(ticket.getCreateDate());
-        newTicket.setStatusName(ticket.getStatusName());
-        newTicket.setUserEmail(ticket.getUserEmail());
-        newTicket.setUserName(ticket.getUserName());
-        newTicket.setUserPhone(ticket.getUserPhone());
-        return newTicket;
     }
 
     public HTTPResponse<Ticket[]> deleteTicket(Ticket[] tickets) {
