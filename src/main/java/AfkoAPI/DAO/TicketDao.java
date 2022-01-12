@@ -76,42 +76,26 @@ public class TicketDao {
     public HTTPResponse changeTicket(Ticket[] tickets) {
         Ticket old = tickets[0];
         Ticket newObject = tickets[1];
-        Optional<Ticket> ticket = ticketRep.findById(old.getId());
-        if (ticket.isEmpty()){
+        Optional<Ticket> t = ticketRep.findById(old.getId());
+        if (t.isEmpty()){
             return HTTPResponse.<Abbreviation[]>returnFailure("could not find ticket with id: " + old.getId());
         }
-        Ticket newTicket = ticket.get();
-        newTicket = copyTicket(newObject);
+        newObject.setId(old.getId());
 
-        ticketRep.save(newTicket);
+        ticketRep.save(newObject);
         return HTTPResponse.<Ticket[]>returnSuccess(tickets);
     }
 
-    public Ticket copyTicket(Ticket ticket) {
-        Ticket newTicket = new Ticket();
-        newTicket.setId(ticket.getId());
-        newTicket.setMessage(ticket.getMessage());
-        newTicket.setAccountId(ticket.getAccountId());
-        newTicket.setTemporaryAbbreviation(ticket.getTemporaryAbbreviation());
-        newTicket.setCreateDate(ticket.getCreateDate());
-        newTicket.setStatusName(ticket.getStatusName());
-        newTicket.setUserEmail(ticket.getUserEmail());
-        newTicket.setUserName(ticket.getUserName());
-        newTicket.setUserPhone(ticket.getUserPhone());
-        newTicket.setRemoved(ticket.isRemoved());
-        newTicket.setType(ticket.getType());
-        return newTicket;
-    }
-
     public HTTPResponse<Abbreviation[]> deleteTicket(Ticket[] tickets) {
+
         for (Ticket ticket: tickets){
             Optional<Ticket> a = ticketRep.findById(ticket.getId());
             if (a.isEmpty()) return HTTPResponse.<Abbreviation[]>returnFailure("could not find ticket with id: " + ticket.getId());
             ticketRep.deleteById(ticket.getId());
             // if there are no more tickets linked to this tempabbr, delete it.
             if (ticket.getTemporaryAbbreviation() != null) {
-                List<Ticket> abbrTickets = ticketRep.findBytemporaryAbbreviation_id(ticket.getTemporaryAbbreviation().getId());
-                if (abbrTickets.size() == 0) tempAbbrRep.deleteById(ticket.getTemporaryAbbreviation().getId());
+                Optional<TempAbbreviation> abbr = tempAbbrRep.findById(ticket.getTemporaryAbbreviation().getId());
+                abbr.ifPresent(tempAbbreviation -> tempAbbrRep.delete(tempAbbreviation));
             }
         }
         return HTTPResponse.<Ticket[]>returnSuccess(tickets);

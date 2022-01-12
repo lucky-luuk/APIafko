@@ -14,11 +14,4 @@ public class TicketDaoTests {
     @Autowired
     TicketDao dao;
 
-    @Test
-    public void copyTicketCopiesTicket() throws Exception {
-        Ticket old = new Ticket();
-        old.setUserName("foo");
-        Ticket newTicket = dao.copyTicket(old);
-        assertThat(old.getUserName().equals(newTicket.getUserName())).isTrue();
-    }
 }
