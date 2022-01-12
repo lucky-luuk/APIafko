@@ -5,10 +5,13 @@ import AfkoAPI.HTTPResponse;
 import AfkoAPI.Model.Account;
 import AfkoAPI.Model.Role;
 import AfkoAPI.RequestObjects.AccountRequestObject;
+import AfkoAPI.RequestObjects.AccountReturnObject;
 import AfkoAPI.RequestObjects.RoleUserRequestObject;
 import AfkoAPI.jwt.JwtRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class AccountController {
@@ -50,7 +53,7 @@ public class AccountController {
     }
 
     @GetMapping("/account")
-    public HTTPResponse getAccountDetails(@RequestParam(name="id", defaultValue="") String id, @RequestParam(name="email", defaultValue = "") String email) {
+    public HTTPResponse<AccountReturnObject> getAccountDetails(@RequestParam(name="id", defaultValue="") String id, @RequestParam(name="email", defaultValue = "") String email) {
         // todo make sure top check if this is the account thats logged in!!!
         if (id.equals(""))
             return accountDao.getIdBelongingToEmail(email);
@@ -58,20 +61,20 @@ public class AccountController {
     }
 
     @PutMapping("/account/mod")
-    public HTTPResponse changeAccount(@RequestBody Account[] accounts) {
+    public HTTPResponse<Account[]> changeAccount(@RequestBody Account[] accounts) {
         if (accounts.length == 2) {
             return accountDao.changeAccount(accounts);
         }
-        return HTTPResponse.returnFailure("input length is not 2");
+        return HTTPResponse.<AccountReturnObject>returnFailure("input length is not 2");
     }
 
     @GetMapping("/account/mod")
-    public HTTPResponse getAllMods(){
+    public HTTPResponse<List<AccountReturnObject>> getAllMods(){
         return accountDao.getAllMods();
     }
 
     @PostMapping("/account/mod")
-    public HTTPResponse createMod(@RequestBody AccountRequestObject acc){
+    public HTTPResponse<AccountReturnObject> createMod(@RequestBody AccountRequestObject acc){
         return accountDao.createMod(acc);
     }
 }
