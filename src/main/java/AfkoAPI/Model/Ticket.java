@@ -48,6 +48,9 @@ public class Ticket {
     @Column()
     private String userPhone;
 
+    @Column()
+    private boolean removed = false;
+
     public Ticket() {
     }
 
@@ -60,6 +63,7 @@ public class Ticket {
         this.userEmail = obj.getUserEmail();
         this.userName = obj.getUserName();
         this.userPhone = obj.getUserPhone();
+        this.removed = obj.isRemoved();
     }
     public Integer getId() {
         return id;
@@ -139,5 +143,13 @@ public class Ticket {
 
     public void setUserPhone(String userPhone) {
         this.userPhone = userPhone;
+    }
+
+    public boolean isRemoved() {
+        return removed;
+    }
+
+    public void setRemoved(boolean removed) {
+        this.removed = removed;
     }
 }

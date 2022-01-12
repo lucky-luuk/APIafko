@@ -86,7 +86,8 @@ public class TicketDao {
         return HTTPResponse.<Ticket[]>returnSuccess(tickets);
     }
 
-    public HTTPResponse<Ticket[]> deleteTicket(Ticket[] tickets) {
+    public HTTPResponse<Abbreviation[]> deleteTicket(Ticket[] tickets) {
+
         for (Ticket ticket: tickets){
             Optional<Ticket> a = ticketRep.findById(ticket.getId());
             if (a.isEmpty()) return HTTPResponse.<Abbreviation[]>returnFailure("could not find ticket with id: " + ticket.getId());
@@ -109,12 +110,20 @@ public class TicketDao {
         return HTTPResponse.<Ticket>returnSuccess(data.get());
     }
 
-    public HTTPResponse getTicketsByAbbreviationId(String abbrID) {
+    public HTTPResponse getTicketsByAbbreviationId(String abbrID, String removed) {
+        if (!removed.equals("null")) {
+            List<Ticket> tickets = ticketRep.findBytemporaryAbbreviation_idAndRemoved(abbrID, Boolean.parseBoolean(removed));
+            return HTTPResponse.<List<Ticket>>returnSuccess(tickets);
+        }
         List<Ticket> tickets = ticketRep.findBytemporaryAbbreviation_id(abbrID);
-        return HTTPResponse.<List<Ticket>>returnSuccess(tickets);
+        return  HTTPResponse.<List<Ticket>>returnSuccess(tickets);
     }
 
     public HTTPResponse getAllTickets() {
         return HTTPResponse.<List<Ticket>>returnSuccess(ticketRep.findAll());
+    }
+
+    public  HTTPResponse getTicketsByRemoved(boolean removed){
+        return HTTPResponse.<List<Ticket>>returnSuccess(ticketRep.findByRemoved(removed));
     }
 }
