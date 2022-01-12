@@ -29,14 +29,6 @@ public class TicketRequestObject {
         this.removed = removed;
     }
 
-    public boolean isRemoved() {
-        return removed;
-    }
-
-    public void setRemoved(boolean removed) {
-        this.removed = removed;
-    }
-
     public String getMessage() {
         return message;
     }
@@ -99,5 +91,13 @@ public class TicketRequestObject {
 
     public void setUserPhone(String userPhone) {
         this.userPhone = userPhone;
+    }
+
+    public boolean isRemoved() {
+        return removed;
+    }
+
+    public void setRemoved(boolean removed) {
+        this.removed = removed;
     }
 }
