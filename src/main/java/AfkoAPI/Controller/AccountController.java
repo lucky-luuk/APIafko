@@ -8,6 +8,7 @@ import AfkoAPI.RequestObjects.AccountRequestObject;
 import AfkoAPI.RequestObjects.AccountReturnObject;
 import AfkoAPI.RequestObjects.RoleUserRequestObject;
 import AfkoAPI.jwt.JwtRequest;
+import AfkoAPI.jwt.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +26,7 @@ public class AccountController {
      * @return success or failure
      */
     @PostMapping("/authenticate")
-    public HTTPResponse createAuthToken(@RequestBody JwtRequest authenticationRequest) {
+    public HTTPResponse<UserResponse> createAuthToken(@RequestBody JwtRequest authenticationRequest) {
         return accountDao.authenticate(authenticationRequest);
     }
 
@@ -33,7 +34,7 @@ public class AccountController {
      * creates a new account
      */
     @PostMapping("/register")
-    public HTTPResponse registerAccount(@RequestBody AccountRequestObject o) {
+    public HTTPResponse<AccountReturnObject> registerAccount(@RequestBody AccountRequestObject o) {
         return accountDao.registerAccount(o.getFirstName(), o.getLastName(), o.getEmail(), o.getPassword());
     }
 
