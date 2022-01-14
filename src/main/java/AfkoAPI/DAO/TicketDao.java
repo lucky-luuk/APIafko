@@ -81,7 +81,8 @@ public class TicketDao {
             return HTTPResponse.<Abbreviation[]>returnFailure("could not find ticket with id: " + old.getId());
         }
         newObject.setId(old.getId());
-
+        if (newObject.getTemporaryAbbreviation() != null)
+            tempAbbrRep.save(newObject.getTemporaryAbbreviation());
         ticketRep.save(newObject);
         return HTTPResponse.<Ticket[]>returnSuccess(tickets);
     }
