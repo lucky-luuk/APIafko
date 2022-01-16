@@ -13,7 +13,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -41,12 +40,12 @@ public class AccountDao {
     }
 
     public Account getByEmail(String email) {
-        Optional<Account> acc = accountRepository.findByemail(email);
+        Optional<Account> acc = accountRepository.findByEmail(email);
         if (acc.isEmpty()) return null;
         else return acc.get();
     }
     public HTTPResponse<AccountReturnObject> getIdBelongingToEmail(String email) {
-        Optional<Account> account = accountRepository.findByemail(email);
+        Optional<Account> account = accountRepository.findByEmail(email);
         if (account.isEmpty())
             return HTTPResponse.<AccountReturnObject>returnFailure("could not find account with that email");
         AccountReturnObject obj = new AccountReturnObject(account.get());
@@ -60,7 +59,7 @@ public class AccountDao {
     }
 
     public HTTPResponse<String> addRoleToUser(String email, String roleName) {
-        Optional<Account> user = accountRepository.findByemail(email);
+        Optional<Account> user = accountRepository.findByEmail(email);
         if (user.isEmpty())
             return HTTPResponse.returnFailure("user does not exist");
 
@@ -75,7 +74,7 @@ public class AccountDao {
     }
 
     public HTTPResponse<String> removeRoleFromUser(String email, String roleName) {
-        Optional<Account> user = accountRepository.findByemail(email);
+        Optional<Account> user = accountRepository.findByEmail(email);
         if (user.isEmpty())
             return HTTPResponse.returnFailure("user does not exist");
 
@@ -142,12 +141,13 @@ public class AccountDao {
      */
     public HTTPResponse<AccountReturnObject> registerAccount(String firstName, String lastName, String email, String password) {
 
-        if (firstName.equals("") || lastName.equals("") || email.equals("") || password.equals(""))
+        if (email.equals("") || password.equals(""))
             return HTTPResponse.<AccountReturnObject>returnFailure("one ore more required parameters were empty");
-        else if (accountRepository.findByemail(email).isPresent())
+        else if (accountRepository.findByEmail(email).isPresent())
             return HTTPResponse.<AccountReturnObject>returnFailure("that email already exists: " + email);
 
-        Account a = new Account(firstName, lastName, email, password);
+        String hashedPassword = userDetailsService.getHashedPassword(password);
+        Account a = new Account(firstName, lastName, email, hashedPassword);
         accountRepository.save(a);
         return HTTPResponse.<AccountReturnObject>returnSuccess(new AccountReturnObject(a));
     }
@@ -162,7 +162,6 @@ public class AccountDao {
                     authenticationRequest.getUsername(), authenticationRequest.getPassword()));
         } catch (DisabledException e) {
             return HTTPResponse.<UserResponse>returnUserDisabled("user: " + authenticationRequest.getUsername() + " is disabled");
-
         } catch (BadCredentialsException e) {
             return HTTPResponse.<UserResponse>returnInvalidCredentials("");
 
@@ -170,7 +169,7 @@ public class AccountDao {
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
-        final Account user = accountRepository.findByemail(authenticationRequest.getUsername()).get();
+        final Account user = accountRepository.findByEmail(authenticationRequest.getUsername()).get();
         return returnToken(token, user);
     }
 

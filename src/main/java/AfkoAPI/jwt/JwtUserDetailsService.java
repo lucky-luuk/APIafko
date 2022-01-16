@@ -32,6 +32,14 @@ public class JwtUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(account.getEmail(), account.getPassword(), new ArrayList<>());
     }
 
+    public boolean doPasswordsMatch(String password, String encryptedPassword) {
+        return bcryptEncoder.matches(password, encryptedPassword);
+    }
+
+    public String getHashedPassword(String password) {
+        return bcryptEncoder.encode(password);
+    }
+
     public void saveAccount(Account account) {
         accountDao.addAccount(account);
     }

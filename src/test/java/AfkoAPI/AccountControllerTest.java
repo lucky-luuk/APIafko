@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 
 @SpringBootTest
-public class AccountControllerTests {
+public class AccountControllerTest {
     @Bean
     @Primary
     public AccountDao accountDao() {
