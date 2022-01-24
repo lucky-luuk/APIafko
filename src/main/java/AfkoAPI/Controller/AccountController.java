@@ -4,6 +4,7 @@ import AfkoAPI.DAO.AccountDao;
 import AfkoAPI.HTTPResponse;
 import AfkoAPI.Model.Account;
 import AfkoAPI.Model.Role;
+import AfkoAPI.RequestObjects.AccountPasswordRequestObject;
 import AfkoAPI.RequestObjects.AccountRequestObject;
 import AfkoAPI.RequestObjects.AccountReturnObject;
 import AfkoAPI.RequestObjects.RoleUserRequestObject;
@@ -77,6 +78,11 @@ public class AccountController {
     @PostMapping("/account/mod")
     public HTTPResponse<AccountReturnObject> createMod(@RequestBody AccountRequestObject acc){
         return accountDao.createMod(acc);
+    }
+
+    @PutMapping("/account/mod/password")
+    public HTTPResponse<Account> changeAccountPassword(@RequestBody AccountPasswordRequestObject acc){
+        return accountDao.changeAccountPassword(acc);
     }
 }
 
