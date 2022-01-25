@@ -55,12 +55,15 @@ public class AbbreviationDao {
      * @return HTTPResponse
      */
     public HTTPResponse<Abbreviation> addAbbreviation(AbbreviationRequestObject abbr) {
+        Account account = null;
+        if (abbr.getAccountId() != null) {
+            Optional<Account> acc = accountRepository.findById(abbr.getAccountId());
+            if (acc.isEmpty())
+                return HTTPResponse.<Abbreviation>returnFailure("could not find account with id: " + abbr.getAccountId());
+            account = acc.get();
+        }
 
-        Optional<Account> acc = accountRepository.findById(abbr.getAccountId());
-        if (acc.isEmpty())
-            return HTTPResponse.<Abbreviation>returnFailure("could not find account with id: " + abbr.getAccountId());
-
-        Abbreviation a = new Abbreviation(abbr.getName(), abbr.getDescription(), abbr.getOrganisations(), acc.get());
+        Abbreviation a = new Abbreviation(abbr.getName(), abbr.getDescription(), abbr.getOrganisations(), account);
         return BlacklistService.filterAbbreviationAndSaveToRepository(blacklistRepository, abbrRep, a);
     }
 

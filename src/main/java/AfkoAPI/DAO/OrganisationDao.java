@@ -31,7 +31,10 @@ public class OrganisationDao {
      * @return
      */
     public HTTPResponse addOrganisations(OrganisationRequestObject[] orgs) {
-        return OrganisationService.addOrganisations(orgRep, orgs);
+        if (orgs[0].getId() == null)
+            return OrganisationService.addOrganisationsGenerateId(orgRep, orgs);
+        else
+            return OrganisationService.addOrganisations(orgRep, orgs);
     }
 
     /** adds organisations, will generate ids for them
@@ -39,7 +42,10 @@ public class OrganisationDao {
      * @return
      */
     public HTTPResponse addOrganisationsGenerateId(OrganisationRequestObject[] orgs) {
-        return OrganisationService.addOrganisationsGenerateId(orgRep, orgs);
+        if (orgs[0].getId() == null)
+            return OrganisationService.addOrganisationsGenerateId(orgRep, orgs);
+        else
+            return OrganisationService.addOrganisations(orgRep, orgs);
     }
 
     public HTTPResponse getOrganisationByID(String id) {
