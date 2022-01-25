@@ -5,6 +5,7 @@ import AfkoAPI.Model.Account;
 import AfkoAPI.Model.Role;
 import AfkoAPI.Repository.AccountRepository;
 import AfkoAPI.Repository.RoleRepo;
+import AfkoAPI.RequestObjects.AccountPasswordRequestObject;
 import AfkoAPI.RequestObjects.AccountRequestObject;
 import AfkoAPI.RequestObjects.AccountReturnObject;
 import AfkoAPI.jwt.*;
@@ -176,5 +177,23 @@ public class AccountDao {
     public HTTPResponse<UserResponse> returnToken(String response, Account account) {
         UserResponse userDetails = new UserResponse(account.getEmail(), account.getFirstName(), account.getLastName(), response, account.isFirstLogin());
         return HTTPResponse.<UserResponse>returnSuccess(userDetails);
+    }
+
+    public HTTPResponse<Account> changeAccountPassword(AccountPasswordRequestObject acc) {
+        if (acc.getEmail().equals("") || acc.getOldPassword().equals("") || acc.getNewPassword().equals(""))
+            return HTTPResponse.<AccountReturnObject>returnFailure("one ore more required parameters were empty");
+        Optional<Account> account = accountRepository.findByEmail(acc.getEmail());
+        if (!account.isPresent())
+            return HTTPResponse.<AccountReturnObject>returnFailure("Account with email: "+ acc.getEmail() + " could not be found!");
+        else if(account.get().getPassword().equals(acc.getOldPassword())) {
+            String hashedPassword = userDetailsService.getHashedPassword(acc.getNewPassword());
+
+            Account newObject = account.get();
+            newObject.setPassword(hashedPassword);
+            accountRepository.save(newObject);
+            return HTTPResponse.returnSuccess(newObject);
+
+        }
+        return HTTPResponse.<AccountReturnObject>returnFailure("Something went wrong");
     }
 }

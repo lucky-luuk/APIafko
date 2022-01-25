@@ -80,9 +80,12 @@ public class Account {
         return password;
     }
 
+
     public boolean isFirstLogin() {
         return firstLogin;
     }
+    public void setPassword(String password){this.password = password;}
+
 
     public void setFirstLogin(boolean firstLogin) {
         this.firstLogin = firstLogin;
