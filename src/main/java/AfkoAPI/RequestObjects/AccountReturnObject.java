@@ -14,6 +14,7 @@ public class AccountReturnObject {
     String lastName;
     String email;
     Set<Role> roles = new HashSet<>();
+    boolean firstLogin;
 
     public AccountReturnObject() {
     }
@@ -24,6 +25,7 @@ public class AccountReturnObject {
         this.lastName = account.getLastName();
         this.email = account.getEmail();
         this.roles = account.getRoles();
+        this.firstLogin = account.isFirstLogin();
     }
 
 

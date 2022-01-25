@@ -148,7 +148,7 @@ public class AccountDao {
             return HTTPResponse.<AccountReturnObject>returnFailure("that email already exists: " + email);
 
         String hashedPassword = userDetailsService.getHashedPassword(password);
-        Account a = new Account(firstName, lastName, email, hashedPassword);
+        Account a = new Account(firstName, lastName, email, hashedPassword, true);
         accountRepository.save(a);
         return HTTPResponse.<AccountReturnObject>returnSuccess(new AccountReturnObject(a));
     }
@@ -175,7 +175,7 @@ public class AccountDao {
     }
 
     public HTTPResponse<UserResponse> returnToken(String response, Account account) {
-        UserResponse userDetails = new UserResponse(account.getEmail(), account.getFirstName(), account.getLastName(), response);
+        UserResponse userDetails = new UserResponse(account.getEmail(), account.getFirstName(), account.getLastName(), response, account.isFirstLogin());
         return HTTPResponse.<UserResponse>returnSuccess(userDetails);
     }
 
