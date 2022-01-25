@@ -6,14 +6,24 @@ public class UserResponse {
     String lastname;
 //    Organisation from user
     String token;
+    boolean firstLogin;
 
     public UserResponse() { }
 
-    public UserResponse(String email, String firstname, String lastname, String token) {
+    public UserResponse(String email, String firstname, String lastname, String token, boolean firstLogin) {
         this.email = email;
         this.firstname = firstname;
         this.lastname = lastname;
         this.token = token;
+        this.firstLogin = firstLogin;
+    }
+
+    public boolean isFirstLogin() {
+        return firstLogin;
+    }
+
+    public void setFirstLogin(boolean firstLogin) {
+        this.firstLogin = firstLogin;
     }
 
     public String getEmail() {
