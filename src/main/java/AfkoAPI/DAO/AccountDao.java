@@ -110,7 +110,7 @@ public class AccountDao {
         newObject.setId(old.getId());
 
         accountRepository.save(newObject);
-        return HTTPResponse.returnSuccess(accounts);
+        return HTTPResponse.returnSuccess("succes");
     }
 
     public HTTPResponse<List<AccountReturnObject>> getAllMods(){
@@ -179,19 +179,19 @@ public class AccountDao {
         return HTTPResponse.<UserResponse>returnSuccess(userDetails);
     }
 
-    public HTTPResponse<Account> changeAccountPassword(AccountPasswordRequestObject acc) {
-        if (acc.getEmail().equals("") || acc.getOldPassword().equals("") || acc.getNewPassword().equals(""))
+    public HTTPResponse<Account> changeAccountPassword(AccountPasswordRequestObject acc, String  email) {
+        if (email.equals("") || acc.getOldPassword().equals("") || acc.getNewPassword().equals(""))
             return HTTPResponse.<AccountReturnObject>returnFailure("one ore more required parameters were empty");
-        Optional<Account> account = accountRepository.findByEmail(acc.getEmail());
-        if (!account.isPresent())
-            return HTTPResponse.<AccountReturnObject>returnFailure("Account with email: "+ acc.getEmail() + " could not be found!");
-        else if(account.get().getPassword().equals(acc.getOldPassword())) {
+        Optional<Account> account = accountRepository.findByEmail(email);
+        if (account.isEmpty())
+            return HTTPResponse.<AccountReturnObject>returnFailure("Account with email: "+ email + " could not be found!");
+        else if(userDetailsService.doPasswordsMatch(acc.getOldPassword(), account.get().getPassword())) {
             String hashedPassword = userDetailsService.getHashedPassword(acc.getNewPassword());
 
             Account newObject = account.get();
             newObject.setPassword(hashedPassword);
             accountRepository.save(newObject);
-            return HTTPResponse.returnSuccess(newObject);
+            return HTTPResponse.returnSuccess("succes");
 
         }
         return HTTPResponse.<AccountReturnObject>returnFailure("Something went wrong");

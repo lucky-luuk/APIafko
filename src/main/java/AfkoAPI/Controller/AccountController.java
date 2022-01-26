@@ -9,6 +9,8 @@ import AfkoAPI.RequestObjects.AccountRequestObject;
 import AfkoAPI.RequestObjects.AccountReturnObject;
 import AfkoAPI.RequestObjects.RoleUserRequestObject;
 import AfkoAPI.jwt.JwtRequest;
+import AfkoAPI.jwt.JwtTokenUtil;
+import AfkoAPI.jwt.JwtUserDetailsService;
 import AfkoAPI.jwt.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,9 @@ import java.util.List;
 public class AccountController {
     @Autowired
     private AccountDao accountDao;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     /**
      * create a jwt token and authenticates using a given username and password, does not require a token
@@ -81,8 +86,9 @@ public class AccountController {
     }
 
     @PutMapping("/account/mod/password")
-    public HTTPResponse<Account> changeAccountPassword(@RequestBody AccountPasswordRequestObject acc){
-        return accountDao.changeAccountPassword(acc);
+    public HTTPResponse<Account> changeAccountPassword(@RequestBody AccountPasswordRequestObject acc, @RequestHeader (name = "Athorization") String token){
+        String email = jwtTokenUtil.getUsernameFromToken(token.substring(7));
+        return accountDao.changeAccountPassword(acc, email);
     }
 }
 

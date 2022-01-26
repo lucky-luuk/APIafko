@@ -44,7 +44,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/role/addtouser",
             "/role/removefromuser",
             "/account",
-            "/account/mod"
+            "/account/mod",
+            "/account/mod/password"
     };
 
     @Autowired
