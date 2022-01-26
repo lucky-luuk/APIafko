@@ -24,10 +24,11 @@ public class Account {
     @Column(name = "firstLogin")
     private boolean firstLogin;
 
-    @ManyToMany(fetch = FetchType.LAZY, targetEntity = Role.class)
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class)
     private Set<Role> roles = new HashSet<>();
 
-    public Account() {}
+    public Account() {
+    }
 
     public Account(String firstName, String lastName, String email, String password, boolean firstLogin) {
         this.firstName = firstName;
