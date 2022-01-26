@@ -1,6 +1,5 @@
 package AfkoAPI.jwt;
 
-import AfkoAPI.DAO.AccountDao;
 import AfkoAPI.Model.Account;
 import AfkoAPI.Repository.AccountRepository;
 import io.jsonwebtoken.Claims;
