@@ -179,21 +179,20 @@ public class AccountDao {
         return HTTPResponse.<UserResponse>returnSuccess(userDetails);
     }
 
-    public HTTPResponse<Account> changeAccountPassword(AccountPasswordRequestObject acc, String  email) {
-        if (email.equals("") || acc.getNewPassword().equals(""))
+    public HTTPResponse<Account> changeAccountPassword(String acc, String  email) {
+        if (email.equals("") || acc.equals("")) {
             return HTTPResponse.<AccountReturnObject>returnFailure("one ore more required parameters were empty");
+        }
         Optional<Account> account = accountRepository.findByEmail(email);
         if (account.isEmpty()) {
             return HTTPResponse.<AccountReturnObject>returnFailure("Account with email: " + email + " could not be found!");
         }
 
-        String hashedPassword = userDetailsService.getHashedPassword(acc.getNewPassword());
+        String hashedPassword = userDetailsService.getHashedPassword(acc);
         Account newObject = account.get();
             newObject.setFirstLogin(false);
             newObject.setPassword(hashedPassword);
             accountRepository.save(newObject);
             return HTTPResponse.returnSuccess("succes");
-
-
     }
 }
