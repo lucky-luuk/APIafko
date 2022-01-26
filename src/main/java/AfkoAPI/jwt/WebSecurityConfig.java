@@ -20,6 +20,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
+import static org.springframework.http.HttpMethod.*;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -40,11 +42,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/organisation_with_id",
             "/blacklist",
             "/ticket/**",
-            "/role/save",
-            "/role/addtouser",
-            "/role/removefromuser",
-            "/account",
-            "/account/mod"
+//            "/role/save",
+//            "/role/addtouser",
+//            "/role/removefromuser",
+//            "/account",
+//            "/account/mod"
     };
 
     @Autowired
@@ -80,14 +82,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // configure cors
         httpSecurity.csrf().disable().cors().configurationSource(this.corsConfigurationSource()).and()
                 // don't authenticate these requests
-                .authorizeRequests().antMatchers(UNSECURED_URLS).permitAll().
+                .authorizeRequests().antMatchers(UNSECURED_URLS).permitAll().and().authorizeRequests()
+                    .antMatchers(POST, "/account/**", "/role/**" ).hasAnyAuthority("ADMIN")
+                    .antMatchers(PUT, "/ticket/**", "/abbreviation/**" ).hasAnyAuthority("MOD")
+                    .antMatchers(POST, "/abbreviation/**" ).hasAnyAuthority("MOD")
+                    .antMatchers(PUT, "/account/**", "/role/**" ).hasAnyAuthority("ADMIN").
                 // all other requests need to be authenticated
                         anyRequest().authenticated().and().
                 // make sure we use stateless session; session won't be used to
                 // store user's state.
                         exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
         // Add a filter to validate the tokens with every request
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
