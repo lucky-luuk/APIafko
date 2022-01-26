@@ -189,6 +189,7 @@ public class AccountDao {
             String hashedPassword = userDetailsService.getHashedPassword(acc.getNewPassword());
 
             Account newObject = account.get();
+            newObject.setFirstLogin(false);
             newObject.setPassword(hashedPassword);
             accountRepository.save(newObject);
             return HTTPResponse.returnSuccess("succes");

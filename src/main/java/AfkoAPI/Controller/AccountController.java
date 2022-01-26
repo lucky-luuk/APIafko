@@ -86,7 +86,7 @@ public class AccountController {
     }
 
     @PutMapping("/account/mod/password")
-    public HTTPResponse<Account> changeAccountPassword(@RequestBody AccountPasswordRequestObject acc, @RequestHeader (name = "Athorization") String token){
+    public HTTPResponse<Account> changeAccountPassword(@RequestBody AccountPasswordRequestObject acc, @RequestHeader (name = "Authorization") String token){
         String email = jwtTokenUtil.getUsernameFromToken(token.substring(7));
         return accountDao.changeAccountPassword(acc, email);
     }
