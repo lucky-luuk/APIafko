@@ -80,7 +80,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/role/removefromuser" ).hasAnyAuthority(RoleNames.ADMIN.getValue())
                 .antMatchers(HttpMethod.GET, "/account" ).hasAnyAuthority(RoleNames.ADMIN.getValue())
                 .antMatchers(HttpMethod.PUT, "/account/mod" ).hasAnyAuthority(RoleNames.ADMIN.getValue())
-                .antMatchers(HttpMethod.GET, "/account/mod" ).hasAnyAuthority(RoleNames.ADMIN.getValue())
+                .antMatchers(HttpMethod.GET, "/account/mod" ).hasAnyAuthority(RoleNames.ADMIN.getValue(), RoleNames.MOD.getValue())
                 .antMatchers(HttpMethod.POST, "/account/mod" ).hasAnyAuthority(RoleNames.ADMIN.getValue())
                 .antMatchers(HttpMethod.DELETE, "/account/mod" ).hasAnyAuthority(RoleNames.ADMIN.getValue())
                 .antMatchers(HttpMethod.PUT, "/account/mod/password" ).hasAnyAuthority(RoleNames.ADMIN.getValue())
@@ -106,7 +106,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         // Add a filter to validate the tokens with every request
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-
     }
 
     @Bean
