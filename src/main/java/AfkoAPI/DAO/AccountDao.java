@@ -180,21 +180,20 @@ public class AccountDao {
     }
 
     public HTTPResponse<Account> changeAccountPassword(AccountPasswordRequestObject acc, String  email) {
-        if (email.equals("") || acc.getOldPassword().equals("") || acc.getNewPassword().equals(""))
+        if (email.equals("") || acc.getNewPassword().equals(""))
             return HTTPResponse.<AccountReturnObject>returnFailure("one ore more required parameters were empty");
         Optional<Account> account = accountRepository.findByEmail(email);
-        if (account.isEmpty())
-            return HTTPResponse.<AccountReturnObject>returnFailure("Account with email: "+ email + " could not be found!");
-        else if(userDetailsService.doPasswordsMatch(acc.getOldPassword(), account.get().getPassword())) {
-            String hashedPassword = userDetailsService.getHashedPassword(acc.getNewPassword());
+        if (account.isEmpty()) {
+            return HTTPResponse.<AccountReturnObject>returnFailure("Account with email: " + email + " could not be found!");
+        }
 
-            Account newObject = account.get();
+        String hashedPassword = userDetailsService.getHashedPassword(acc.getNewPassword());
+        Account newObject = account.get();
             newObject.setFirstLogin(false);
             newObject.setPassword(hashedPassword);
             accountRepository.save(newObject);
             return HTTPResponse.returnSuccess("succes");
 
-        }
-        return HTTPResponse.<AccountReturnObject>returnFailure("Something went wrong");
+
     }
 }
