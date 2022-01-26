@@ -3,7 +3,7 @@ package AfkoAPI.RequestObjects;
 public class AccountPasswordRequestObject {
     String newPassword;
 
-    public AccountPasswordRequestObject(String email, String oldPassword, String newPassword){
+    public AccountPasswordRequestObject(String email, String newPassword){
         this.newPassword = newPassword;
     }
     public String getNewPassword() {
