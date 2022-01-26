@@ -85,7 +85,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers(UNSECURED_URLS).permitAll().and().authorizeRequests()
                     .antMatchers(POST, "/account/**", "/role/**" ).hasAnyAuthority("ADMIN")
                     .antMatchers(PUT, "/ticket/**", "/abbreviation/**" ).hasAnyAuthority("MOD")
-                    .antMatchers(POST, "/ticket/**", "/abbreviation/**" ).hasAnyAuthority("MOD")
+                    .antMatchers(POST, "/abbreviation/**" ).hasAnyAuthority("MOD")
                     .antMatchers(PUT, "/account/**", "/role/**" ).hasAnyAuthority("ADMIN").
                 // all other requests need to be authenticated
                         anyRequest().authenticated().and().
