@@ -85,6 +85,11 @@ public class AccountController {
         return accountDao.createMod(acc);
     }
 
+    @DeleteMapping("/account/mod")
+    public HTTPResponse<AccountReturnObject> deleteMod(@RequestBody AccountRequestObject[] acc) {
+        return accountDao.deleteAccount(acc[0]);
+    }
+
     @PutMapping("/account/mod/password")
     public HTTPResponse<Account> changeAccountPassword(@RequestBody AccountPasswordRequestObject accountPasswordRequestObject, @RequestHeader (name = "Authorization", defaultValue = "") String token){
         System.out.println(token);

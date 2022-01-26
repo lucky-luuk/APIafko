@@ -40,6 +40,12 @@ public class AccountDao {
         accountRepository.save(account);
     }
 
+    public HTTPResponse<AccountReturnObject> deleteAccount(AccountRequestObject acc) {
+        Optional<Account> a = accountRepository.findByEmail(acc.getEmail());
+        if (a.isEmpty()) return HTTPResponse.returnFailure("could not find account email");
+        accountRepository.delete(a.get());
+        return HTTPResponse.returnSuccess("");
+    }
     public Account getByEmail(String email) {
         Optional<Account> acc = accountRepository.findByEmail(email);
         if (acc.isEmpty()) return null;
