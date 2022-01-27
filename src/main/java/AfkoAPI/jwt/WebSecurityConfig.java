@@ -93,8 +93,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/organisation" ).hasAnyAuthority(RoleNames.MOD.getValue(), RoleNames.ADMIN.getValue())
                 .antMatchers(HttpMethod.POST, "/organisation_with_id" ).hasAnyAuthority(RoleNames.MOD.getValue(), RoleNames.ADMIN.getValue())
                 // ticket controller
-                .antMatchers(HttpMethod.PUT, "/abbreviation" ).hasAnyAuthority(RoleNames.MOD.getValue(), RoleNames.ADMIN.getValue())
-                .antMatchers(HttpMethod.DELETE, "/abbreviation" ).hasAnyAuthority(RoleNames.MOD.getValue(), RoleNames.ADMIN.getValue())
+                .antMatchers(HttpMethod.PUT, "/ticket" ).hasAnyAuthority(RoleNames.MOD.getValue(), RoleNames.ADMIN.getValue())
+                .antMatchers(HttpMethod.DELETE, "/ticket" ).hasAnyAuthority(RoleNames.MOD.getValue(), RoleNames.ADMIN.getValue())
+                .antMatchers(HttpMethod.GET, "/ticket" ).hasAnyAuthority(RoleNames.MOD.getValue(), RoleNames.ADMIN.getValue())
 
                 .antMatchers(HttpMethod.GET, "/abbreviation","/organisation", "/score" ).permitAll()
                 .antMatchers(HttpMethod.POST, "/score", "/ticket" ).permitAll()
