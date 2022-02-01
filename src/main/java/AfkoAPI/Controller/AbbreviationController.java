@@ -18,7 +18,6 @@ public class AbbreviationController {
         return "";
     }
 
-    @CrossOrigin
     @PostMapping("/abbreviation")
     public HTTPResponse addAbbreviation(@RequestBody AbbreviationRequestObject[] abbrs) {
         return dao.addAbbreviations(abbrs);
