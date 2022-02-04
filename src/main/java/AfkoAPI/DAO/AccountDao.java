@@ -106,7 +106,7 @@ public class AccountDao {
         return HTTPResponse.returnSuccess(new AccountReturnObject(account.get()));
     }
 
-    public HTTPResponse<Account[]> changeAccount(Account[] accounts) {
+    public HTTPResponse<String> changeAccount(Account[] accounts) {
         Account old = accounts[0];
         Account newObject = accounts[1];
         Optional<Account> account = accountRepository.findById(old.getId());

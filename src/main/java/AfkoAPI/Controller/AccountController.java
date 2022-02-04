@@ -68,7 +68,7 @@ public class AccountController {
     }
 
     @PutMapping("/account/mod")
-    public HTTPResponse<Account[]> changeAccount(@RequestBody Account[] accounts) {
+    public HTTPResponse<String> changeAccount(@RequestBody Account[] accounts) {
         if (accounts.length == 2) {
             return accountDao.changeAccount(accounts);
         }

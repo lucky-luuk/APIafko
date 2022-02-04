@@ -71,7 +71,7 @@ public class AbbreviationDao {
      * @param id the id to filter with
      * @return an HTTPResponse containing a single abbreviation
      */
-    public HTTPResponse getAbbreviationByID(String id) {
+    public HTTPResponse<Abbreviation> getAbbreviationByID(String id) {
         Optional<Abbreviation> data = abbrRep.findById(id);
 
         if (data.isEmpty())
@@ -85,7 +85,7 @@ public class AbbreviationDao {
      * @param amount the maximum amount of abbreviations to return
      * @return an HTTPResponse containing a list of abbreviations
      */
-    public HTTPResponse getAbbreviationByNameOrOrgId(String name, String orgId, String amount) {
+    public HTTPResponse<List<Abbreviation>> getAbbreviationByNameOrOrgId(String name, String orgId, String amount) {
         List<Abbreviation> data = null;
         if (orgId.equals(""))
             data = abbrRep.findByNameStartsWithIgnoreCase(name);

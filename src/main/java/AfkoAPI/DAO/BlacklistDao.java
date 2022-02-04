@@ -20,7 +20,7 @@ public class BlacklistDao {
      * @param maxAmount the max amount of rows to return
      * @return HTTPResponse containing the returned data
      */
-    public HTTPResponse getBlacklist(String maxAmount) {
+    public HTTPResponse<List<BlacklistEntry>> getBlacklist(String maxAmount) {
         TrimListService<BlacklistEntry> service = new TrimListService<>();
         List<BlacklistEntry> data = repository.findAll();
         data = service.trimListByAmount(data, maxAmount);

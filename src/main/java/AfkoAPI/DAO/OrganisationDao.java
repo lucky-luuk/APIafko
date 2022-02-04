@@ -19,7 +19,7 @@ public class OrganisationDao {
 
     public OrganisationDao() {}
 
-    public HTTPResponse getAllOrganisationData() {
+    public HTTPResponse<List<Organisation>> getAllOrganisationData() {
         List<Organisation> data = orgRep.findAll();
 
         if (data.isEmpty()) return HTTPResponse.<List<Organisation>>returnFailure("could not find organisation data");
@@ -48,14 +48,14 @@ public class OrganisationDao {
             return OrganisationService.addOrganisations(orgRep, orgs);
     }
 
-    public HTTPResponse getOrganisationByID(String id) {
+    public HTTPResponse<Organisation> getOrganisationByID(String id) {
         Optional<Organisation> data = orgRep.findById(id);
         if (data.isEmpty())
             return HTTPResponse.<Organisation>returnFailure("could not find id");
         return HTTPResponse.<Organisation>returnSuccess(data.get());
     }
 
-    public HTTPResponse getOrganisationByName(String name) {
+    public HTTPResponse<List<Organisation>> getOrganisationByName(String name) {
         List<Organisation> data = orgRep.findByName(name);
         if (data.isEmpty()) return HTTPResponse.<List<Organisation>>returnFailure("could not find name");
         return HTTPResponse.<List<Organisation>>returnSuccess(data);

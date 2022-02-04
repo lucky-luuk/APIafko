@@ -42,8 +42,6 @@ public class AbbreviationController {
                                         @RequestParam(name="name", defaultValue="") String name,
                                         @RequestParam(name="org_id", defaultValue="") String orgId,
                                         @RequestParam(name="max_amount", defaultValue="") String amount) {
-
-
         if (!id.equals("")) return dao.getAbbreviationByID(id);
         else if (!name.equals("")) return dao.getAbbreviationByNameOrOrgId(name, orgId, amount);
         else if (!orgId.equals("")) return dao.getAbbreviationByOrgId(orgId, amount);

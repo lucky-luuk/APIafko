@@ -6,6 +6,8 @@ import AfkoAPI.Model.BlacklistEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class BlacklistController {
     @Autowired
@@ -17,7 +19,7 @@ public class BlacklistController {
     }
 
     @PostMapping("/blacklist")
-    public HTTPResponse addToBlackList(@RequestBody BlacklistEntry[] entries) {
+    public HTTPResponse<List<BlacklistEntry>> addToBlackList(@RequestBody BlacklistEntry[] entries) {
         return dao.addMultipleToBlacklist(entries);
     }
 
