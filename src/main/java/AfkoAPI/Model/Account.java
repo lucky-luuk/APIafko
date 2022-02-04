@@ -21,16 +21,21 @@ public class Account {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY, targetEntity = Role.class)
+    @Column(name = "firstLogin")
+    private boolean firstLogin;
+
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class)
     private Set<Role> roles = new HashSet<>();
 
-    public Account() {}
+    public Account() {
+    }
 
-    public Account(String firstName, String lastName, String email, String password) {
+    public Account(String firstName, String lastName, String email, String password, boolean firstLogin) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.firstLogin = firstLogin;
         this.id = UUID.randomUUID().toString();
     }
 
@@ -77,4 +82,13 @@ public class Account {
     }
 
 
+    public boolean isFirstLogin() {
+        return firstLogin;
+    }
+    public void setPassword(String password){this.password = password;}
+
+
+    public void setFirstLogin(boolean firstLogin) {
+        this.firstLogin = firstLogin;
+    }
 }

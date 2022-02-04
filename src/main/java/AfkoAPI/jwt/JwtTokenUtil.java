@@ -1,8 +1,11 @@
 package AfkoAPI.jwt;
 
+import AfkoAPI.Model.Account;
+import AfkoAPI.Repository.AccountRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -10,14 +13,17 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 // source: https://www.javainuse.com/spring/boot-jwt
 @Component
 public class JwtTokenUtil {
     private static final long serialVersionUID = -2550185165626007488L;
-
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+
+    @Autowired
+    AccountRepository accRep;
 
     @Value("${jwt.secret}")
     private String secret;
@@ -51,6 +57,10 @@ public class JwtTokenUtil {
     //generate token for user
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        Optional<Account> account = accRep.findByEmail(userDetails.getUsername());
+        account.get().getRoles().forEach(role -> {
+            claims.put("role", role.getName());
+        });
         return doGenerateToken(claims, userDetails.getUsername());
     }
 

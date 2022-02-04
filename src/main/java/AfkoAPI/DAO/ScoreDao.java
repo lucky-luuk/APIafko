@@ -19,7 +19,7 @@ public class ScoreDao {
 
     public ScoreDao(){}
 
-    public HTTPResponse getScoreList(){
+    public HTTPResponse<List<Player>> getScoreList() {
         List<Player> data = scoreRep.findTop5ByOrderByScoreDesc();
 
         if (data.isEmpty())
@@ -27,7 +27,7 @@ public class ScoreDao {
         return HTTPResponse.returnSuccess(data);
     }
 
-    public HTTPResponse addScore(String name,Integer score, String orgId) {
+    public HTTPResponse<Player> addScore(String name,Integer score, String orgId) {
         Optional<Organisation> org = orgRep.findById(orgId);
 
         if (org.isEmpty()) return HTTPResponse.<Player>returnFailure("organisation with id: " + orgId + " does not exist");

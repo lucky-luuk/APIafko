@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 // use mvn test to run tests
 @SpringBootTest
-class AfkoApplicationTests {
+class AfkoApplicationTest {
 
 	@Test
 	void contextLoads() {

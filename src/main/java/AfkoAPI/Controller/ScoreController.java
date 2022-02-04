@@ -2,6 +2,7 @@ package AfkoAPI.Controller;
 
 import AfkoAPI.DAO.ScoreDao;
 import AfkoAPI.HTTPResponse;
+import AfkoAPI.Model.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import AfkoAPI.RequestObjects.ScoreRequestObject;
@@ -17,10 +18,10 @@ public class ScoreController {
     ScoreDao dao;
 
     @GetMapping("/score")
-    public HTTPResponse getScoreFromScoreBoard() {return dao.getScoreList();}
+    public HTTPResponse<List<Player>> getScoreFromScoreBoard() {return dao.getScoreList();}
 
     @PostMapping("/score")
-    public HTTPResponse addScore(@RequestBody ScoreRequestObject[] scores) {
+    public HTTPResponse<Player> addScore(@RequestBody ScoreRequestObject[] scores) {
         ScoreRequestObject score = scores[0];
         return dao.addScore(score.getName(),score.getScore(),score.getOrganisation_id());}
 }

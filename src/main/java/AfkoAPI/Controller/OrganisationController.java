@@ -24,6 +24,7 @@ public class OrganisationController {
      * @param o the organisations
      * @return HTTPResponse
      */
+    @Deprecated
     @PostMapping("/organisation_with_id")
     public HTTPResponse addOrganisationBulk(@RequestBody OrganisationRequestObject[] o) {
         return dao.addOrganisations(o);

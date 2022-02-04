@@ -5,6 +5,7 @@ import AfkoAPI.Model.Account;
 import AfkoAPI.Model.Role;
 import AfkoAPI.Repository.AccountRepository;
 import AfkoAPI.Repository.RoleRepo;
+import AfkoAPI.RequestObjects.AccountPasswordRequestObject;
 import AfkoAPI.RequestObjects.AccountRequestObject;
 import AfkoAPI.RequestObjects.AccountReturnObject;
 import AfkoAPI.jwt.*;
@@ -13,10 +14,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,19 +40,22 @@ public class AccountDao {
         accountRepository.save(account);
     }
 
+    public HTTPResponse<AccountReturnObject> deleteAccount(AccountRequestObject acc) {
+        Optional<Account> a = accountRepository.findByEmail(acc.getEmail());
+        if (a.isEmpty()) return HTTPResponse.returnFailure("could not find account email");
+        accountRepository.delete(a.get());
+        return HTTPResponse.returnSuccess("");
+    }
     public Account getByEmail(String email) {
-        Optional<Account> acc = accountRepository.findByemail(email);
+        Optional<Account> acc = accountRepository.findByEmail(email);
         if (acc.isEmpty()) return null;
         else return acc.get();
     }
     public HTTPResponse<AccountReturnObject> getIdBelongingToEmail(String email) {
-        Optional<Account> account = accountRepository.findByemail(email);
+        Optional<Account> account = accountRepository.findByEmail(email);
         if (account.isEmpty())
             return HTTPResponse.<AccountReturnObject>returnFailure("could not find account with that email");
-        AccountReturnObject obj = new AccountReturnObject(account.get().getId(),
-                account.get().getFirstName(),
-                account.get().getLastName(),
-                account.get().getEmail());
+        AccountReturnObject obj = new AccountReturnObject(account.get());
         return HTTPResponse.<AccountReturnObject>returnSuccess(obj);
     }
 
@@ -62,7 +66,7 @@ public class AccountDao {
     }
 
     public HTTPResponse<String> addRoleToUser(String email, String roleName) {
-        Optional<Account> user = accountRepository.findByemail(email);
+        Optional<Account> user = accountRepository.findByEmail(email);
         if (user.isEmpty())
             return HTTPResponse.returnFailure("user does not exist");
 
@@ -77,7 +81,7 @@ public class AccountDao {
     }
 
     public HTTPResponse<String> removeRoleFromUser(String email, String roleName) {
-        Optional<Account> user = accountRepository.findByemail(email);
+        Optional<Account> user = accountRepository.findByEmail(email);
         if (user.isEmpty())
             return HTTPResponse.returnFailure("user does not exist");
 
@@ -99,10 +103,10 @@ public class AccountDao {
         Optional<Account> account = accountRepository.findById(id);
         if (account.isEmpty())
             return HTTPResponse.returnFailure("could not find account with id: " + id);
-        return HTTPResponse.returnSuccess(new AccountReturnObject(account.get().getId(), account.get().getFirstName(), account.get().getLastName(), account.get().getEmail()));
+        return HTTPResponse.returnSuccess(new AccountReturnObject(account.get()));
     }
 
-    public HTTPResponse changeAccount(Account[] accounts) {
+    public HTTPResponse<String> changeAccount(Account[] accounts) {
         Account old = accounts[0];
         Account newObject = accounts[1];
         Optional<Account> account = accountRepository.findById(old.getId());
@@ -112,21 +116,25 @@ public class AccountDao {
         newObject.setId(old.getId());
 
         accountRepository.save(newObject);
-        return HTTPResponse.returnSuccess(accounts);
+        return HTTPResponse.returnSuccess("succes");
     }
 
-    public HTTPResponse getAllMods(){
+    public HTTPResponse<List<AccountReturnObject>> getAllMods(){
         List<Account> accs = accountRepository.findByRoles_name(RoleNames.MOD.getValue());
-        return HTTPResponse.returnSuccess(accs);
+        List<AccountReturnObject> returnValues = new ArrayList<>();
+        for (Account a : accs) {
+            returnValues.add(new AccountReturnObject(a));
+        }
+        return HTTPResponse.returnSuccess(returnValues);
     }
 
-    public HTTPResponse createMod(AccountRequestObject acc){
-        HTTPResponse<Account> r = registerAccount(acc.getFirstName(), acc.getLastName(), acc.getEmail(), acc.getPassword());
+    public HTTPResponse<AccountReturnObject> createMod(AccountRequestObject acc){
+        HTTPResponse<AccountReturnObject> r = registerAccount(acc.getFirstName(), acc.getLastName(), acc.getEmail(), acc.getPassword());
         if (!r.isSuccess())
             return r;
         String email = r.getData().getEmail();
         addRoleToUser(email, RoleNames.MOD.getValue());
-        return HTTPResponse.returnSuccess(acc);
+        return HTTPResponse.returnSuccess(r.getData());
     }
 
 
@@ -138,42 +146,59 @@ public class AccountDao {
      * @param password the encrypted password used by the account
      * @return an HTTPResponse containing the created account
      */
-    public HTTPResponse registerAccount(String firstName, String lastName, String email, String password) {
+    public HTTPResponse<AccountReturnObject> registerAccount(String firstName, String lastName, String email, String password) {
 
-        if (firstName.equals("") || lastName.equals("") || email.equals("") || password.equals(""))
-            return HTTPResponse.<Account>returnFailure("one ore more required parameters were empty");
-        else if (accountRepository.findByemail(email).isPresent())
-            return HTTPResponse.<Account>returnFailure("that email already exists: " + email);
+        if (email.equals("") || password.equals(""))
+            return HTTPResponse.<AccountReturnObject>returnFailure("one ore more required parameters were empty");
+        else if (accountRepository.findByEmail(email).isPresent())
+            return HTTPResponse.<AccountReturnObject>returnFailure("that email already exists: " + email);
 
-        Account a = new Account(firstName, lastName, email, password);
+        String hashedPassword = userDetailsService.getHashedPassword(password);
+        Account a = new Account(firstName, lastName, email, hashedPassword, true);
         accountRepository.save(a);
-        return HTTPResponse.<Account>returnSuccess(a);
+        return HTTPResponse.<AccountReturnObject>returnSuccess(new AccountReturnObject(a));
     }
 
     /** authenticates an account
      * @param authenticationRequest the data to authenticate with
      * @return failure or success
      */
-    public HTTPResponse authenticate(JwtRequest authenticationRequest) {
+    public HTTPResponse<UserResponse> authenticate(JwtRequest authenticationRequest) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     authenticationRequest.getUsername(), authenticationRequest.getPassword()));
         } catch (DisabledException e) {
-            return HTTPResponse.<JwtResponse>returnUserDisabled("user: " + authenticationRequest.getUsername() + " is disabled");
-
+            return HTTPResponse.<UserResponse>returnUserDisabled("user: " + authenticationRequest.getUsername() + " is disabled");
         } catch (BadCredentialsException e) {
-            return HTTPResponse.<JwtResponse>returnInvalidCredentials("");
+            return HTTPResponse.<UserResponse>returnInvalidCredentials("");
 
         }
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
-        final Account user = accountRepository.findByemail(authenticationRequest.getUsername()).get();
+        final Account user = accountRepository.findByEmail(authenticationRequest.getUsername()).get();
         return returnToken(token, user);
     }
 
-    public HTTPResponse returnToken(String response, Account account) {
-        UserResponse userDetails = new UserResponse(account.getEmail(), account.getFirstName(), account.getLastName(), response);
+    public HTTPResponse<UserResponse> returnToken(String response, Account account) {
+        UserResponse userDetails = new UserResponse(account.getEmail(), account.getFirstName(), account.getLastName(), response, account.isFirstLogin());
         return HTTPResponse.<UserResponse>returnSuccess(userDetails);
+    }
+
+    public HTTPResponse<Account> changeAccountPassword(String acc, String  email) {
+        if (email.equals("") || acc.equals("")) {
+            return HTTPResponse.<AccountReturnObject>returnFailure("one ore more required parameters were empty");
+        }
+        Optional<Account> account = accountRepository.findByEmail(email);
+        if (account.isEmpty()) {
+            return HTTPResponse.<AccountReturnObject>returnFailure("Account with email: " + email + " could not be found!");
+        }
+
+        String hashedPassword = userDetailsService.getHashedPassword(acc);
+        Account newObject = account.get();
+            newObject.setFirstLogin(false);
+            newObject.setPassword(hashedPassword);
+            accountRepository.save(newObject);
+            return HTTPResponse.returnSuccess("succes");
     }
 }

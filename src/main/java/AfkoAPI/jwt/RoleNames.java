@@ -1,7 +1,9 @@
 package AfkoAPI.jwt;
 
 public enum RoleNames {
-    MOD("MOD");
+    MOD("MOD"),
+    ADMIN("ADMIN");
+
     private String value;
 
     RoleNames(String value) {
